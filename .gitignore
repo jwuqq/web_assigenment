@@ -14,3 +14,6 @@ Thumbs.db
 # Mac 元数据
 __MACOSX/
 ._*
+
+# 本地参考文件（不上传）
+*.pdf
