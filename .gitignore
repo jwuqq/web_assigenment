@@ -1,0 +1,16 @@
+# 数据库原始文件（用 .sql 导出即可）
+*.frm
+*.ibd
+*.myd
+*.myi
+db.opt
+
+# XAMPP / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Mac 元数据
+__MACOSX/
+._*
