@@ -233,7 +233,7 @@ $conn->close();
         <!-- ========== VIEW 1: 角色选择 ========== -->
         <div id="role-select" class="role-select"<?php echo $view !== 'role' ? ' style="display:none"' : ''; ?>>
             <h1><span class="logo-icon">🧋</span> 在超市后门偷喝奶茶的二人</h1>
-            <p class="login-subtitle">一杯好茶，一天好心情</p>
+            <p class="login-subtitle">来杯好茶爻一爻，吉星高照爻一爻</p>
 
             <div class="role-cards">
                 <div class="role-card" data-role="customer" tabindex="0">
@@ -252,7 +252,7 @@ $conn->close();
             <button type="button" class="back-link">← 返回选择</button>
 
             <h1><span class="logo-icon">🧋</span> 在超市后门偷喝奶茶的二人</h1>
-            <p class="login-subtitle">一杯好茶，一天好心情</p>
+            <p class="login-subtitle">来杯好茶爻一爻，吉星高照爻一爻</p>
 
             <!-- Tab buttons -->
             <div class="tab-buttons">
