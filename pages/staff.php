@@ -61,12 +61,12 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>奶茶坊 — 店员后台</title><link rel="stylesheet" href="../styles/style.css">
+<title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
 <header>
 <nav>
-    <div class="logo">🧋 奶茶坊 · 店员后台</div>
+    <div class="logo">🧋 在超市后门偷喝奶茶的二人 · 店员后台</div>
     <ul class="nav-links">
         <li><a href="logout.php">🔙 退出</a></li>
         <li><a href="#orders">订单管理</a></li>
@@ -162,6 +162,6 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
 </section>
 </main>
 
-<footer>© 2026 奶茶坊 — wangkun 24160144</footer>
+<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144</footer>
 <script src="../scripts/script.js"></script>
 </body></html>

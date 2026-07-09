@@ -15,8 +15,29 @@ if (isset($_SESSION['role'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奶茶坊 — 登录</title>
+    <title>在超市后门偷喝奶茶的二人 — 登录</title>
     <link rel="stylesheet" href="../styles/index.css">
+    <style>
+        body {
+            overflow: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: -10%;
+            background: url('../images/index/preview.jpg') center/cover no-repeat;
+            animation: bgPan 20s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+        @keyframes bgPan {
+            0%   { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(-1%, -0.5%); }
+        }
+        .login-container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
 <?php
@@ -196,7 +217,7 @@ $conn->close();
 
         <!-- ========== VIEW 1: 角色选择 ========== -->
         <div id="role-select" class="role-select"<?php echo $view !== 'role' ? ' style="display:none"' : ''; ?>>
-            <h1>🧋 奶茶坊</h1>
+            <h1>🧋 在超市后门偷喝奶茶的二人</h1>
             <p class="login-subtitle">一杯好茶，一天好心情</p>
 
             <div class="role-cards">
@@ -215,7 +236,7 @@ $conn->close();
         <div id="customer-panel" class="customer-panel<?php echo $view === 'customer' ? ' active' : ''; ?>">
             <button type="button" class="back-link">← 返回选择</button>
 
-            <h1>🧋 奶茶坊</h1>
+            <h1>🧋 在超市后门偷喝奶茶的二人</h1>
             <p class="login-subtitle">一杯好茶，一天好心情</p>
 
             <!-- Tab buttons -->

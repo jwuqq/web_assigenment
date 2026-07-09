@@ -38,12 +38,12 @@ $myOrders = $conn->query("SELECT * FROM orders WHERE user_id={$_SESSION['user_id
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>奶茶坊 — 顾客</title><link rel="stylesheet" href="../styles/style.css">
+<title>在超市后门偷喝奶茶的二人 — 顾客</title><link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
 <header>
 <nav>
-    <div class="logo">🧋 奶茶坊</div>
+    <div class="logo">🧋 在超市后门偷喝奶茶的二人</div>
     <ul class="nav-links">
         <li><a href="logout.php">🔙 返回登录</a></li>
         <li><a href="#about">店铺简介</a></li>
@@ -60,7 +60,7 @@ $myOrders = $conn->query("SELECT * FROM orders WHERE user_id={$_SESSION['user_id
 <!-- 店铺简介 -->
 <section id="about" class="card">
     <h2>🏠 店铺简介</h2>
-    <p>欢迎光临 <strong>奶茶坊</strong>！精选鲜奶与好茶，手工现做，每一杯都是好味道。🍵</p>
+    <p>欢迎光临 <strong>在超市后门偷喝奶茶的二人</strong>！精选鲜奶与好茶，手工现做，每一杯都是好味道。🍵</p>
     <p>营业时间：10:00 - 22:00 | 地址：学府路 88 号</p>
 </section>
 
@@ -125,6 +125,6 @@ $myOrders = $conn->query("SELECT * FROM orders WHERE user_id={$_SESSION['user_id
 </section>
 </main>
 
-<footer>© 2026 奶茶坊 — wangkun 24160144</footer>
+<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144</footer>
 <script src="../scripts/script.js"></script>
 </body></html>
