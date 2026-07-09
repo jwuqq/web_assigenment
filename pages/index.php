@@ -38,9 +38,8 @@ if (isset($_SESSION['role'])) {
             z-index: 1;
         }
         .login-card {
-            transform: scale(1.5);
-            transform-origin: top center;
-            margin-top: 18vh;
+            max-width: 660px;
+            padding: 3rem;
         }
         .logo-icon {
             display: inline-block;
