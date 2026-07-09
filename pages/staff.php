@@ -51,6 +51,25 @@ if (isset($_POST['reply'])) {
     }
 }
 
+// --- Update price ---
+if (isset($_POST['update_price'])) {
+    $did = intval($_POST['drink_id']);
+    $drink = $conn->query("SELECT name, price FROM inventory WHERE id=$did")->fetch_assoc();
+    if ($drink) {
+        $oldPrice = $drink['price'];
+        if ($_POST['price_action'] === 'inc') {
+            $newPrice = $oldPrice + 1;
+        } elseif ($_POST['price_action'] === 'dec') {
+            $newPrice = max(0, $oldPrice - 1);
+        } elseif ($_POST['price_action'] === 'set') {
+            $newPrice = max(0, floatval($_POST['new_price']));
+        }
+        $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
+        $conn->query("INSERT INTO announcements (message) VALUES ('💰 {$drink['name']} 价格调整：¥" . number_format($oldPrice, 2) . " → ¥" . number_format($newPrice, 2) . "')");
+        $msg = "✅ 价格已更新：" . $drink['name'];
+    }
+}
+
 // --- Delete drink ---
 if (isset($_POST['delete_drink'])) {
     $did = intval($_POST['drink_id']);
@@ -119,7 +138,28 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
         <tr>
             <td><?php echo $d['id']; ?></td>
             <td><?php echo $d['name']; ?></td>
-            <td>¥<?php echo $d['price']; ?></td>
+            <td style="white-space:nowrap;">
+                <form method="POST" style="display:inline-flex; align-items:center; gap:4px;">
+                    <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
+                    <input type="hidden" name="update_price" value="1">
+                    <input type="hidden" name="price_action" value="dec">
+                    <button type="submit" class="btn-sm" style="padding:0.2rem 0.5rem; font-size:0.8rem;">−</button>
+                </form>
+                ¥<?php echo number_format($d['price'], 2); ?>
+                <form method="POST" style="display:inline-flex; align-items:center; gap:4px;">
+                    <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
+                    <input type="hidden" name="update_price" value="1">
+                    <input type="hidden" name="price_action" value="inc">
+                    <button type="submit" class="btn-sm" style="padding:0.2rem 0.5rem; font-size:0.8rem;">+</button>
+                </form>
+                <form method="POST" style="display:inline-flex; align-items:center; gap:2px; margin-left:6px;">
+                    <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
+                    <input type="hidden" name="update_price" value="1">
+                    <input type="hidden" name="price_action" value="set">
+                    <input type="number" name="new_price" step="0.01" min="0" value="<?php echo number_format($d['price'], 2); ?>" style="width:65px; padding:0.2rem 0.3rem; font-size:0.8rem; border:1px solid #ddd; border-radius:4px; text-align:center;">
+                    <button type="submit" class="btn-sm" style="padding:0.2rem 0.4rem; font-size:0.75rem;">确定</button>
+                </form>
+            </td>
             <td><?php echo $d['available'] ? '🟢 上架' : '🔴 售罄'; ?></td>
             <td>
                 <form method="POST" style="display:inline">
