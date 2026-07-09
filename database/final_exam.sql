@@ -18,6 +18,6 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Default staff account (password: staff123)
+-- Default staff account (password: 114514)
 INSERT INTO users (username, password, email, security_question, security_answer, role) VALUES
-('staff01', '$2y$10$placeholder', 'staff@milktea.com', '店名是什么?', '奶茶坊', 'staff');
+('milktea', '$2y$10$iCJ6K51PdN//NRaPPRcWIOl593EEA1fojii8eaNHNRTpWcaDdcYxO', 'staff@milktea.com', '店名是什么?', '奶茶坊', 'staff');
