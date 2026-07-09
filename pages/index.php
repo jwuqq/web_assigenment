@@ -24,15 +24,23 @@ if (isset($_SESSION['role'])) {
         body::before {
             content: '';
             position: fixed;
-            inset: -10%;
-            background: url('../images/index/preview.jpg') center/cover no-repeat;
-            animation: bgPan 20s ease-in-out infinite alternate;
+            inset: 0;
             z-index: -1;
+            <?php if (strpos($_SERVER['HTTP_HOST'] ?? '', 'rf.gd') !== false): ?>
+                /* 云端：纯色渐变（避免内容审查误判） */
+                background: linear-gradient(135deg, #fce4ec, #f3e5f5 50%, #ede7f6);
+            <?php else: ?>
+                /* 本地：原版背景图 */
+                background: url('../images/index/preview.jpg') center/cover no-repeat;
+                animation: bgPan 20s ease-in-out infinite alternate;
+            <?php endif; ?>
         }
+        <?php if (strpos($_SERVER['HTTP_HOST'] ?? '', 'rf.gd') === false): ?>
         @keyframes bgPan {
             0%   { transform: scale(1) translate(0, 0); }
             100% { transform: scale(1.1) translate(-1%, -0.5%); }
         }
+        <?php endif; ?>
         .login-container {
             position: relative;
             z-index: 1;
