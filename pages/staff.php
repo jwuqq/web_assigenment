@@ -81,6 +81,7 @@ $pendingOrders = $conn->query("SELECT o.*,u.username FROM orders o JOIN users u 
 $inventory = $conn->query("SELECT * FROM inventory ORDER BY id");
 $totalRevenue = $conn->query("SELECT SUM(amount) AS total FROM revenue")->fetch_assoc()['total'] ?? 0;
 $doneCount = $conn->query("SELECT COUNT(*) AS c FROM orders WHERE status='done'")->fetch_assoc()['c'];
+$doneOrders = $conn->query("SELECT r.*, u.username FROM revenue r LEFT JOIN orders o ON r.order_id = o.id LEFT JOIN users u ON o.user_id = u.id ORDER BY r.created_at DESC");
 $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON f.user_id=u.id ORDER BY f.created_at DESC");
 ?>
 <!DOCTYPE html>
@@ -186,6 +187,29 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
         <div class="stat-box"><h3>¥<?php echo number_format($totalRevenue, 2); ?></h3><p>总营收</p></div>
         <div class="stat-box"><h3><?php echo $doneCount; ?></h3><p>已完成订单</p></div>
     </div>
+    <details style="margin-top:1rem;">
+        <summary style="cursor:pointer; color:#6a1b9a; font-weight:600; font-size:0.95rem;">
+            📋 查看所有已完成订单 (<?php echo $doneCount; ?>单)
+        </summary>
+        <div style="margin-top:0.8rem; max-height:400px; overflow-y:auto;">
+        <?php if ($doneOrders && $doneOrders->num_rows > 0): ?>
+        <table class="data-table">
+            <tr><th>顾客</th><th>饮品</th><th>数量</th><th>金额</th><th>完成时间</th></tr>
+            <?php while ($ro = $doneOrders->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($ro['username'] ?? '—'); ?></td>
+                <td><?php echo htmlspecialchars($ro['drink_name']); ?></td>
+                <td><?php echo $ro['quantity']; ?></td>
+                <td>¥<?php echo number_format($ro['amount'], 2); ?></td>
+                <td><?php echo $ro['created_at']; ?></td>
+            </tr>
+            <?php endwhile; ?>
+        </table>
+        <?php else: ?>
+        <p style="color:#999;">暂无已完成订单</p>
+        <?php endif; ?>
+        </div>
+    </details>
 </section>
 
 <!-- 顾客评价 -->
