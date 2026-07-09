@@ -1,9 +1,9 @@
 <?php
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'staff') {
-    header('Location: index.php'); exit();
+    header('Location: ../index.php'); exit();
 }
-require_once 'includes/db.php';
+require_once '../includes/db.php';
 
 $msg = '';
 
@@ -61,7 +61,7 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>奶茶坊 — 店员后台</title><link rel="stylesheet" href="styles/style.css">
+<title>奶茶坊 — 店员后台</title><link rel="stylesheet" href="../styles/style.css">
 </head>
 <body>
 <header>
@@ -163,5 +163,5 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
 </main>
 
 <footer>© 2026 奶茶坊 — wangkun 24160144</footer>
-<script src="scripts/script.js"></script>
+<script src="../scripts/script.js"></script>
 </body></html>

@@ -3,9 +3,9 @@ session_start();
 // If already logged in, redirect
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] === 'staff') {
-        header('Location: staff.php');
+        header('Location: pages/staff.php');
     } else {
-        header('Location: customer.php');
+        header('Location: pages/customer.php');
     }
     exit();
 }
@@ -82,9 +82,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
                 $_SESSION['role'] = $row['role'];
                 $_SESSION['logged_in'] = true;
                 if ($row['role'] === 'staff') {
-                    header('Location: staff.php');
+                    header('Location: pages/staff.php');
                 } else {
-                    header('Location: customer.php');
+                    header('Location: pages/customer.php');
                 }
                 exit();
             } else {
