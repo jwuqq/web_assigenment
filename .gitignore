@@ -10,6 +10,7 @@ db.opt
 Thumbs.db
 .vscode/
 .idea/
+.claude/
 
 # Mac 元数据
 __MACOSX/

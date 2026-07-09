@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'staff') {
-    header('Location: ../index.php'); exit();
+    header('Location: index.php'); exit();
 }
 require_once '../includes/db.php';
 

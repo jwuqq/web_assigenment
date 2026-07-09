@@ -1,6 +1,6 @@
 <?php
 /**
- * 入口文件 — 重定向到登录/注册页
+ * 入口 — 跳转登录页
  */
 header('Location: pages/index.php');
 exit();
