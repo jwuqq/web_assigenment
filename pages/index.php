@@ -16,7 +16,7 @@ if (isset($_SESSION['role'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>奶茶坊 — 登录</title>
-    <link rel="stylesheet" href="../styles/style.css">
+    <link rel="stylesheet" href="../styles/index.css">
 </head>
 <body>
 <?php
@@ -239,7 +239,7 @@ $conn->close();
                     <label for="login-username">用户名</label>
                     <div class="input-icon-wrapper">
                         <span class="input-icon">👤</span>
-                        <input type="text" id="login-username" name="login_username" class="no-toggle" placeholder="顾客或店员用户名" required>
+                        <input type="text" id="login-username" name="login_username" class="no-toggle" placeholder="用户名" required>
                     </div>
                 </div>
                 <div class="form-group">

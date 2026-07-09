@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp \"d:/VScode/xampp1/htdocs/assignment2/index.php\" \"d:/VScode/xampp1/htdocs/assignment2/pages/index.php\")",
+      "Bash(php -r \"echo password_hash\\('staff123', PASSWORD_DEFAULT\\);\")",
+      "Bash(\"D:/VScode/xampp1/php/php.exe\" -r \"echo password_hash\\('114514', PASSWORD_DEFAULT\\);\")",
+      "Bash(D:/VScode/xampp1/php/php.exe -r ' *)",
+      "Bash(cp \"D:/steam/steamapps/workshop/content/431960/3597298508/preview.jpg\" \"D:/VScode/xampp1/htdocs/assignment2/images/index1.jpg\")",
+      "Bash(netstat -ano)",
+      "Bash(cmd.exe //c \"netstat -ano | findstr :443\")"
+    ],
+    "additionalDirectories": [
+      "d:\\VScode\\xampp1\\htdocs\\assignment2",
+      "D:\\steam\\steamapps\\workshop\\content\\431960\\3597298508"
+    ]
+  }
+}

@@ -287,6 +287,13 @@ footer {
     padding-right: 12px;
 }
 
+/* Hide browser native password reveal icon */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    display: none;
+}
+
 /* ===== Password toggle button ===== */
 .pw-toggle {
     position: absolute;
