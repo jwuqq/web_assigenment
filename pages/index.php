@@ -37,6 +37,22 @@ if (isset($_SESSION['role'])) {
             position: relative;
             z-index: 1;
         }
+        .login-card {
+            transform: scale(1.5);
+            transform-origin: top center;
+            margin-top: 18vh;
+        }
+        .logo-icon {
+            display: inline-block;
+            cursor: default;
+        }
+        .logo-icon:hover {
+            animation: swing 1.5s ease-in-out infinite;
+        }
+        @keyframes swing {
+            0%, 100% { transform: rotate(-45deg); }
+            50%      { transform: rotate(45deg); }
+        }
     </style>
 </head>
 <body>
@@ -217,12 +233,12 @@ $conn->close();
 
         <!-- ========== VIEW 1: 角色选择 ========== -->
         <div id="role-select" class="role-select"<?php echo $view !== 'role' ? ' style="display:none"' : ''; ?>>
-            <h1>🧋 在超市后门偷喝奶茶的二人</h1>
+            <h1><span class="logo-icon">🧋</span> 在超市后门偷喝奶茶的二人</h1>
             <p class="login-subtitle">一杯好茶，一天好心情</p>
 
             <div class="role-cards">
                 <div class="role-card" data-role="customer" tabindex="0">
-                    <span class="role-icon">🧋</span>
+                    <span class="role-icon">👤</span>
                     <span class="role-label">我是顾客</span>
                 </div>
                 <div class="role-card" data-role="staff" tabindex="0">
@@ -236,7 +252,7 @@ $conn->close();
         <div id="customer-panel" class="customer-panel<?php echo $view === 'customer' ? ' active' : ''; ?>">
             <button type="button" class="back-link">← 返回选择</button>
 
-            <h1>🧋 在超市后门偷喝奶茶的二人</h1>
+            <h1><span class="logo-icon">🧋</span> 在超市后门偷喝奶茶的二人</h1>
             <p class="login-subtitle">一杯好茶，一天好心情</p>
 
             <!-- Tab buttons -->
