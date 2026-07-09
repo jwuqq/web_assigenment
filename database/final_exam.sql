@@ -21,3 +21,11 @@ CREATE TABLE users (
 -- Default staff account (password: 114514) — no security question
 INSERT INTO users (username, password, email, security_question, security_answer, role) VALUES
 ('milktea', '$2y$10$iCJ6K51PdN//NRaPPRcWIOl593EEA1fojii8eaNHNRTpWcaDdcYxO', 'staff@milktea.com', '', '', 'staff');
+
+-- Announcements table (staff actions → customer notifications)
+DROP TABLE IF EXISTS announcements;
+CREATE TABLE announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    message VARCHAR(200) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

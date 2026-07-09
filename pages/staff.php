@@ -21,7 +21,13 @@ if (isset($_POST['complete'])) {
 // --- Toggle availability ---
 if (isset($_POST['toggle'])) {
     $did = intval($_POST['drink_id']);
+    $drink = $conn->query("SELECT name, available FROM inventory WHERE id=$did")->fetch_assoc();
     $conn->query("UPDATE inventory SET available=1-available WHERE id=$did");
+    if ($drink) {
+        $status = $drink['available'] ? '🔴 ' . $drink['name'] . ' 暂时售罄' : '🧋 ' . $drink['name'] . ' 已上架，欢迎点单！';
+        $conn->query("INSERT INTO announcements (message) VALUES ('$status')");
+    }
+    $msg = $drink ? "✅ 已更新：" . $drink['name'] : '';
 }
 
 // --- Add new drink ---
@@ -30,6 +36,7 @@ if (isset($_POST['add_drink'])) {
     $price = floatval($_POST['new_price']);
     if (!empty($name) && $price > 0) {
         $conn->query("INSERT INTO inventory (name,price) VALUES ('$name',$price)");
+        $conn->query("INSERT INTO announcements (message) VALUES ('🆕 新品上线：$name，¥$price')");
         $msg = "✅ 已添加：$name";
     }
 }
@@ -61,7 +68,7 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/style.css">
+<title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/index.css">
 </head>
 <body>
 <header>

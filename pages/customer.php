@@ -33,12 +33,13 @@ if (isset($_POST['feedback'])) {
 
 $menu = $conn->query("SELECT * FROM inventory WHERE available=1 ORDER BY id");
 $myOrders = $conn->query("SELECT * FROM orders WHERE user_id={$_SESSION['user_id']} ORDER BY created_at DESC LIMIT 10");
+$announcements = $conn->query("SELECT * FROM announcements ORDER BY created_at DESC LIMIT 5");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>在超市后门偷喝奶茶的二人 — 顾客</title><link rel="stylesheet" href="../styles/style.css">
+<title>在超市后门偷喝奶茶的二人 — 顾客</title><link rel="stylesheet" href="../styles/index.css">
 </head>
 <body>
 <header>
@@ -56,6 +57,17 @@ $myOrders = $conn->query("SELECT * FROM orders WHERE user_id={$_SESSION['user_id
 
 <main>
 <?php if ($msg): ?><div class="msg msg-success"><?php echo $msg; ?></div><?php endif; ?>
+
+<!-- 公告栏 -->
+<?php if ($announcements && $announcements->num_rows > 0): ?>
+<section class="card" style="background:#f3e5f5; border-left:4px solid #6a1b9a;">
+    <h2>📢 店铺公告</h2>
+    <?php while ($a = $announcements->fetch_assoc()): ?>
+    <p style="margin:0.4rem 0; font-size:0.95rem;"><?php echo htmlspecialchars($a['message']); ?>
+        <span style="color:#aaa; font-size:0.78rem; margin-left:0.5rem;"><?php echo $a['created_at']; ?></span></p>
+    <?php endwhile; ?>
+</section>
+<?php endif; ?>
 
 <!-- 店铺简介 -->
 <section id="about" class="card">
