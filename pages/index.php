@@ -43,9 +43,10 @@ if (isset($_SESSION['role'])) {
         }
         .logo-icon {
             display: inline-block;
-            cursor: default;
+            cursor: pointer;
+            font-size: 1.6em;
         }
-        .logo-icon:hover {
+        .logo-icon.swinging {
             animation: swing 1.5s ease-in-out infinite;
         }
         @keyframes swing {
@@ -439,6 +440,14 @@ $conn->close();
     </div>
 </div>
 
+<script>
+    // 奶茶图标：首次悬停后永久摇晃
+    document.querySelectorAll('.logo-icon').forEach(function (el) {
+        el.addEventListener('mouseenter', function () {
+            this.classList.add('swinging');
+        }, { once: true });
+    });
+</script>
 <script src="../scripts/script.js"></script>
 </body>
 </html>
