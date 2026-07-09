@@ -25,14 +25,13 @@ if (isset($_SESSION['role'])) {
             content: '';
             position: fixed;
             inset: -10%;
-            background: linear-gradient(135deg, #fce4ec, #f3e5f5, #ede7f6, #e8eaf6, #fce4ec);
-            background-size: 400% 400%;
-            animation: bgShift 15s ease-in-out infinite alternate;
+            background: url('../images/index/preview.jpg') center/cover no-repeat;
+            animation: bgPan 20s ease-in-out infinite alternate;
             z-index: -1;
         }
-        @keyframes bgShift {
-            0%   { background-position: 0% 0%; }
-            100% { background-position: 100% 100%; }
+        @keyframes bgPan {
+            0%   { transform: scale(1) translate(0, 0); }
+            100% { transform: scale(1.1) translate(-1%, -0.5%); }
         }
         .login-container {
             position: relative;
