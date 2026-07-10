@@ -80,11 +80,13 @@ if (isset($_POST['checkout_cart'])) {
             }
 
             $conn->commit();
-            $msg = "✅ 已提交 {$inserted} 款饮品，合计 ¥" . money_fmt($total_all);
+            $_SESSION['cart_ok'] = "✅ 已提交 {$inserted} 款饮品，合计 ¥" . money_fmt($total_all);
         } catch (Throwable $e) {
             $conn->rollback();
-            $error = $e->getMessage() ?: "提交订单失败，请稍后再试。";
+            $_SESSION['cart_error'] = $e->getMessage() ?: "提交订单失败，请稍后再试。";
         }
+        header('Location: customer.php#menu');
+        exit();
     }
 }
 
@@ -137,8 +139,10 @@ if (isset($_POST['feedback'])) {
     exit();
 }
 // Restore flash messages after redirect
-if (isset($_SESSION['fb_ok'])) { $msg = $_SESSION['fb_ok']; unset($_SESSION['fb_ok']); }
-if (isset($_SESSION['fb_error'])) { $error = $_SESSION['fb_error']; unset($_SESSION['fb_error']); }
+if (isset($_SESSION['cart_ok'])) { $msg = $_SESSION['cart_ok']; unset($_SESSION['cart_ok']); }
+if (isset($_SESSION['cart_error'])) { $error = $_SESSION['cart_error']; unset($_SESSION['cart_error']); }
+if (isset($_SESSION['fb_ok'])) { $msg = $msg ?: $_SESSION['fb_ok']; unset($_SESSION['fb_ok']); }
+if (isset($_SESSION['fb_error'])) { $error = $error ?: $_SESSION['fb_error']; unset($_SESSION['fb_error']); }
 
 $menu = $conn->query("SELECT * FROM inventory WHERE available=1 ORDER BY id");
 $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
