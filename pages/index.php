@@ -81,6 +81,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row['password'])) {
+                // 顾客和店员用不同session名，同一个浏览器可以两边同时登
                 session_write_close();
                 $sessName = $row['role'] === 'staff' ? 'STAFF' : 'CUSTOMER';
                 session_name($sessName);

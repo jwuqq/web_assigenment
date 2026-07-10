@@ -43,7 +43,7 @@ function drink_note($name) {
     return $notes[$name] ?? '鲜奶茶底，可按口味备注给店员。';
 }
 
-// --- Checkout cart ---
+// 购物车批量下单，用事务保证要么全成功要么全回滚
 if (isset($_POST['checkout_cart'])) {
     $cart_payload = $_POST['cart_payload'] ?? '[]';
     $cart_items = json_decode($cart_payload, true);
@@ -149,7 +149,7 @@ $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $myOrders = $stmt->get_result();
-// Auto-generate today's recommendation if not exists
+// 每日推荐：当天第一条由系统随机选，之后保持不动，第二天自动换
 $today = date('Y-m-d');
 $todayRec = $conn->query("SELECT id FROM announcements WHERE message LIKE '🌟 今日推荐%' AND DATE(created_at)='$today'");
 if ($todayRec->num_rows === 0) {

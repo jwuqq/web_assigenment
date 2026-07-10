@@ -8,7 +8,7 @@ require_once '../includes/db.php';
 
 $msg = '';
 
-// Flash message helper
+// 用session暂存提示消息，POST后重定向再读出来，防F5重复提交
 function flash($key, $val) { $_SESSION[$key] = $val; }
 function do_redirect($anchor = '') {
     header('Location: staff.php' . ($anchor ? '#' . $anchor : ''));
@@ -73,7 +73,7 @@ if (isset($_POST['reply'])) {
     do_redirect('reviews');
 }
 
-// --- Update price (AJAX +/- via sendBeacon, only "set" redirects) ---
+// 调价：+/-走sendBeacon不刷新，输入金额点确定才刷新+写公告
 if (isset($_POST['update_price'])) {
     $did = intval($_POST['drink_id']);
     $drink = $conn->query("SELECT name, price FROM inventory WHERE id=$did")->fetch_assoc();
