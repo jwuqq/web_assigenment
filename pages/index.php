@@ -1,6 +1,6 @@
 <?php
+// ── 登录页入口，已登过的直接跳对应面板 ──
 session_start();
-// If already logged in, redirect
 if (isset($_SESSION['role'])) {
     if ($_SESSION['role'] === 'staff') {
         header('Location: staff.php');
@@ -29,7 +29,7 @@ $activeTab = 'login';   // customer tab default
 $staffError = '';       // staff login error
 $view = 'role';         // 'role' | 'customer' | 'staff' — tracks which panel to show after POST
 
-// --- CUSTOMER: REGISTER ---
+// ── 顾客注册：验证两次密码一致，密码加密存库 ──
 if (isset($_POST['action']) && $_POST['action'] === 'register') {
     $view = 'customer';
     $username = trim($_POST['reg_username']);
@@ -66,7 +66,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
     }
 }
 
-// --- CUSTOMER: LOGIN ---
+// ── 顾客登录：查库验证，按角色跳转 ──
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $view = 'customer';
     $username = trim($_POST['login_username']);
@@ -81,7 +81,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row['password'])) {
-                // 顾客和店员用不同session名，同一个浏览器可以两边同时登
+                // 分开session名，同浏览器可同时登顾客+店员
                 session_write_close();
                 $sessName = $row['role'] === 'staff' ? 'STAFF' : 'CUSTOMER';
                 session_name($sessName);
@@ -107,7 +107,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
     }
 }
 
-// --- CUSTOMER: FORGOT PASSWORD ---
+// ── 顾客找回密码：两步验证（用户名→密保答案）──
 if (isset($_POST['action']) && $_POST['action'] === 'forgot') {
     $view = 'customer';
     if (isset($_POST['step']) && $_POST['step'] === 'verify') {
@@ -162,7 +162,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'forgot') {
     }
 }
 
-// --- STAFF LOGIN ---
+// ── 店员登录：仅验证用户名+密码+role=staff ──
 if (isset($_POST['action']) && $_POST['action'] === 'staff_login') {
     $view = 'staff';
     $s_username = trim($_POST['staff_username']);

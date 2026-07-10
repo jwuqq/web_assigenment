@@ -1,4 +1,5 @@
 <?php
+// ── 顾客端：只有customer角色能进 ──
 session_name('CUSTOMER');
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'customer') {
@@ -9,6 +10,7 @@ require_once '../includes/db.php';
 $msg = '';
 $error = '';
 
+// ── 几个工具函数：格式化价格、取饮品图片、取饮品描述 ──
 function money_fmt($amount) {
     return number_format((float)$amount, 2);
 }
@@ -43,7 +45,7 @@ function drink_note($name) {
     return $notes[$name] ?? '鲜奶茶底，可按口味备注给店员。';
 }
 
-// 购物车批量下单，用事务保证要么全成功要么全回滚
+// ── 购物车批量下单：用事务保证原子性 ──
 if (isset($_POST['checkout_cart'])) {
     $cart_payload = $_POST['cart_payload'] ?? '[]';
     $cart_items = json_decode($cart_payload, true);
@@ -85,12 +87,13 @@ if (isset($_POST['checkout_cart'])) {
             $conn->rollback();
             $_SESSION['cart_error'] = $e->getMessage() ?: "提交订单失败，请稍后再试。";
         }
+        // PRG重定向防F5刷新重复下单
         header('Location: customer.php#menu');
         exit();
     }
 }
 
-// --- Place order: legacy fallback ---
+// ── 单品快速下单（从卡片直接下单，不走购物车）──
 if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
     $drink_id = (int)($_POST['drink_id'] ?? 0);
     $qty = max(1, min(10, (int)($_POST['quantity'] ?? 1)));
@@ -113,7 +116,7 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
     }
 }
 
-// --- Submit feedback ---
+// ── 提交留言反馈：防刷屏机制（最少3字+2分钟冷却）──
 if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
@@ -138,18 +141,21 @@ if (isset($_POST['feedback'])) {
     header('Location: customer.php#fb');
     exit();
 }
-// Restore flash messages after redirect
+
+// 从session把重定向前的消息捞出来
 if (isset($_SESSION['cart_ok'])) { $msg = $_SESSION['cart_ok']; unset($_SESSION['cart_ok']); }
 if (isset($_SESSION['cart_error'])) { $error = $_SESSION['cart_error']; unset($_SESSION['cart_error']); }
 if (isset($_SESSION['fb_ok'])) { $msg = $msg ?: $_SESSION['fb_ok']; unset($_SESSION['fb_ok']); }
 if (isset($_SESSION['fb_error'])) { $error = $error ?: $_SESSION['fb_error']; unset($_SESSION['fb_error']); }
 
+// ── 查数据库准备渲染 ──
 $menu = $conn->query("SELECT * FROM inventory WHERE available=1 ORDER BY id");
 $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $myOrders = $stmt->get_result();
-// 每日推荐：当天第一条由系统随机选，之后保持不动，第二天自动换
+
+// 每日推荐：当天第一位访客触发随机选择，写入DB后全天不变，第二天自动刷新
 $today = date('Y-m-d');
 $todayRec = $conn->query("SELECT id FROM announcements WHERE message LIKE '🌟 今日推荐%' AND DATE(created_at)='$today'");
 if ($todayRec->num_rows === 0) {
@@ -158,15 +164,18 @@ if ($todayRec->num_rows === 0) {
         $conn->query("INSERT INTO announcements (message) VALUES ('🌟 今日推荐：{$rand['name']} —— 试试看吧！')");
     }
 }
+// 公告排序：推荐置顶，其余按时间倒序
 $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN message LIKE '🌟 今日推荐%' THEN 0 ELSE 1 END, created_at DESC LIMIT 5");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>在超市后门偷喝奶茶的二人 — 顾客</title><link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/customer.css">
+<title>在超市后门偷喝奶茶的二人 — 顾客</title>
+<link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/customer.css">
 </head>
 <body>
+<!-- ── 顶部导航 ── -->
 <header>
 <nav>
     <div class="logo">🧋 在超市后门偷喝奶茶的二人</div>
@@ -185,6 +194,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 <?php if ($msg): ?><div class="msg msg-success"><?php echo $msg; ?></div><?php endif; ?>
 <?php if ($error): ?><div class="msg msg-error"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
 
+<!-- ══════════ Hero区：店铺门面 ══════════ -->
 <section class="customer-hero">
     <div class="hero-copy">
         <span class="eyebrow">今日手作 · 现点现做</span>
@@ -197,7 +207,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     </div>
 </section>
 
-<!-- 公告栏 -->
+<!-- ══════════ 公告栏：每日推荐置顶 + 店员操作公告 ══════════ -->
 <section class="card announcement-card">
     <h2>📢 店铺公告</h2>
     <?php if ($announcements && $announcements->num_rows > 0):
@@ -209,14 +219,14 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     <?php endif; ?>
 </section>
 
-<!-- 店铺简介 -->
+<!-- ══════════ 店铺简介 ══════════ -->
 <section id="about" class="card">
     <h2>🏠 店铺简介</h2>
     <p>欢迎光临 <strong>在超市后门偷喝奶茶的二人</strong>！精选鲜奶与好茶，手工现做，每一杯都是好味道。🍵</p>
     <p>营业时间：10:00 - 22:00 | 地址：学府路 88 号</p>
 </section>
 
-<!-- 饮品订购 -->
+<!-- ══════════ 饮品订购：卡片式菜单 + 购物车 ══════════ -->
 <section id="menu" class="card">
     <div class="section-head">
         <div>
@@ -255,6 +265,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     <p class="empty-state" id="drink-empty" hidden>没有找到对应饮品。</p>
 </section>
 
+<!-- ══════════ 购物车：汇总后统一提交 ══════════ -->
 <section id="cart" class="card cart-card">
     <div class="section-head">
         <div>
@@ -277,7 +288,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     </form>
 </section>
 
-<!-- 候单排队 -->
+<!-- ══════════ 候单排队：我下的单 ══════════ -->
 <section id="queue" class="card">
     <h2>⏳ 候单排队</h2>
     <?php if ($myOrders->num_rows > 0): ?>
@@ -298,7 +309,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     <?php endif; ?>
 </section>
 
-<!-- 留言反馈 -->
+<!-- ══════════ 留言反馈 ══════════ -->
 <section id="fb" class="card">
     <h2>💬 留言反馈</h2>
     <form method="POST" action="" autocomplete="off">
@@ -323,6 +334,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 </section>
 </main>
 
+<!-- ── 下单确认弹窗 ── -->
 <div class="modal-backdrop" id="order-modal" hidden>
     <div class="order-modal" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
         <button type="button" class="modal-close" aria-label="关闭">×</button>

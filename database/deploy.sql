@@ -1,8 +1,13 @@
--- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
+-- ============================================================
+--  在超市后门偷喝奶茶的二人 — 云端部署用数据库完整导出
+--  Database: final_exam
+--  用法: 在phpMyAdmin里选 Import → 选这个文件 → 执行
+--  包含: 表结构 + 初始数据（饮品6款 + 店员账号milktea）
+-- ============================================================
 --
+-- MariaDB dump 10.19  Distrib 10.4.32-MariaDB, for Win64 (AMD64)
 -- Host: localhost    Database: final_exam
--- ------------------------------------------------------
--- Server version	10.4.32-MariaDB
+-- Server version 10.4.32-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,7 +21,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `announcements`
+-- 6. 公告表 announcements — 店员操作公告 & 每日推荐
 --
 
 DROP TABLE IF EXISTS `announcements`;
@@ -40,7 +45,7 @@ LOCK TABLES `announcements` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `feedback`
+-- 4. 评价表 feedback — 顾客留言 & 店员回复
 --
 
 DROP TABLE IF EXISTS `feedback`;
@@ -67,7 +72,7 @@ LOCK TABLES `feedback` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `inventory`
+-- 2. 饮品表 inventory — 菜单管理
 --
 
 DROP TABLE IF EXISTS `inventory`;
@@ -95,7 +100,7 @@ INSERT INTO `inventory` VALUES (1,'珍珠奶茶',12.00,'',1,'2026-07-09 14:59:50
 UNLOCK TABLES;
 
 --
--- Table structure for table `orders`
+-- 3. 订单表 orders — 顾客下单记录
 --
 
 DROP TABLE IF EXISTS `orders`;
@@ -125,7 +130,7 @@ INSERT INTO `orders` VALUES (1,2,1,'珍珠奶茶',2,24.00,'done','2026-07-09 15:
 UNLOCK TABLES;
 
 --
--- Table structure for table `revenue`
+-- 5. 营收表 revenue — 已完成订单流水
 --
 
 DROP TABLE IF EXISTS `revenue`;
@@ -153,7 +158,7 @@ INSERT INTO `revenue` VALUES (1,1,'珍珠奶茶',2,24.00,'2026-07-09 15:02:24');
 UNLOCK TABLES;
 
 --
--- Table structure for table `users`
+-- 1. 用户表 users — 登录/注册/角色
 --
 
 DROP TABLE IF EXISTS `users`;

@@ -1,4 +1,5 @@
 <?php
+// ── 店员后台：只有staff角色能进 ──
 session_name('STAFF');
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'staff') {
@@ -15,9 +16,8 @@ function do_redirect($anchor = '') {
     exit();
 }
 
-// --- Complete order (AJAX sendBeacon, no redirect needed) ---
+// ── 处理订单完成（正常走sendBeacon，这里兜底非AJAX情况）──
 if (isset($_POST['complete']) && empty($_POST['_ajax'])) {
-    // fallback for non-AJAX
     $oid = intval($_POST['order_id']);
     $o = $conn->query("SELECT * FROM orders WHERE id=$oid")->fetch_assoc();
     if ($o && $o['status']==='pending') {
@@ -26,7 +26,7 @@ if (isset($_POST['complete']) && empty($_POST['_ajax'])) {
     }
 }
 
-// --- Toggle availability ---
+// ── 切换饮品上架/售罄 ──
 if (isset($_POST['toggle'])) {
     $did = intval($_POST['drink_id']);
     $drink = $conn->query("SELECT name, available FROM inventory WHERE id=$did")->fetch_assoc();
@@ -39,12 +39,12 @@ if (isset($_POST['toggle'])) {
     do_redirect('stock');
 }
 
-// --- Add new drink ---
+// ── 新增饮品（支持上传图片）──
 if (isset($_POST['add_drink'])) {
     $name = trim($_POST['new_name']);
     $price = floatval($_POST['new_price']);
     if (!empty($name) && $price > 0) {
-        // Handle image upload
+        // 处理上传的图片，存到images/drinks/
         $imagePath = '';
         if (!empty($_FILES['drink_image']['tmp_name'])) {
             $ext = pathinfo($_FILES['drink_image']['name'], PATHINFO_EXTENSION);
@@ -62,7 +62,7 @@ if (isset($_POST['add_drink'])) {
     do_redirect('stock');
 }
 
-// --- Reply feedback ---
+// ── 回复顾客评价 ──
 if (isset($_POST['reply'])) {
     $fid = intval($_POST['fb_id']);
     $reply = trim($_POST['reply_text']);
@@ -73,7 +73,7 @@ if (isset($_POST['reply'])) {
     do_redirect('reviews');
 }
 
-// 调价：+/-走sendBeacon不刷新，输入金额点确定才刷新+写公告
+// ── 调整饮品价格（+/-走sendBeacon不刷新，输入金额点确定才刷新+写公告）──
 if (isset($_POST['update_price'])) {
     $did = intval($_POST['drink_id']);
     $drink = $conn->query("SELECT name, price FROM inventory WHERE id=$did")->fetch_assoc();
@@ -82,11 +82,11 @@ if (isset($_POST['update_price'])) {
         if ($_POST['price_action'] === 'inc') {
             $newPrice = $oldPrice + 1;
             $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
-            exit(); // AJAX, no output
+            exit(); // AJAX静默完成，不刷新
         } elseif ($_POST['price_action'] === 'dec') {
             $newPrice = max(0, $oldPrice - 1);
             $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
-            exit(); // AJAX, no output
+            exit();
         } elseif ($_POST['price_action'] === 'set') {
             $newPrice = max(0, floatval($_POST['new_price']));
             $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
@@ -99,7 +99,7 @@ if (isset($_POST['update_price'])) {
     }
 }
 
-// --- Delete drink ---
+// ── 删除饮品 ──
 if (isset($_POST['delete_drink'])) {
     $did = intval($_POST['drink_id']);
     $conn->query("DELETE FROM inventory WHERE id=$did");
@@ -107,23 +107,26 @@ if (isset($_POST['delete_drink'])) {
     do_redirect('stock');
 }
 
-// Restore flash message
+// 从session里把重定向前的提示消息读出来
 if (isset($_SESSION['staff_msg'])) { $msg = $_SESSION['staff_msg']; unset($_SESSION['staff_msg']); }
 
+// ── 查各种数据准备渲染页面 ──
 $pendingOrders = $conn->query("SELECT o.*,u.username FROM orders o JOIN users u ON o.user_id=u.id WHERE o.status='pending' ORDER BY o.created_at");
-$inventory = $conn->query("SELECT * FROM inventory ORDER BY id");
-$totalRevenue = $conn->query("SELECT SUM(amount) AS total FROM revenue")->fetch_assoc()['total'] ?? 0;
-$doneCount = $conn->query("SELECT COUNT(*) AS c FROM orders WHERE status='done'")->fetch_assoc()['c'];
-$doneOrders = $conn->query("SELECT r.*, u.username FROM revenue r LEFT JOIN orders o ON r.order_id = o.id LEFT JOIN users u ON o.user_id = u.id ORDER BY r.created_at DESC");
-$feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
+$inventory     = $conn->query("SELECT * FROM inventory ORDER BY id");
+$totalRevenue  = $conn->query("SELECT SUM(amount) AS total FROM revenue")->fetch_assoc()['total'] ?? 0;
+$doneCount     = $conn->query("SELECT COUNT(*) AS c FROM orders WHERE status='done'")->fetch_assoc()['c'];
+$doneOrders    = $conn->query("SELECT r.*, u.username FROM revenue r LEFT JOIN orders o ON r.order_id = o.id LEFT JOIN users u ON o.user_id = u.id ORDER BY r.created_at DESC");
+$feedback      = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/staff.css">
+<title>在超市后门偷喝奶茶的二人 — 店员后台</title>
+<link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/staff.css">
 </head>
 <body>
+<!-- ── 顶部导航 ── -->
 <header>
 <nav>
     <div class="logo">🧋 在超市后门偷喝奶茶的二人 · 店员后台</div>
@@ -140,7 +143,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
 <main>
 <?php if ($msg): ?><div class="msg msg-success"><?php echo $msg; ?></div><?php endif; ?>
 
-<!-- 订单管理 -->
+<!-- ══════════ 订单管理 ══════════ -->
 <section id="orders" class="card">
     <h2>📦 待处理订单</h2>
     <?php if ($pendingOrders->num_rows > 0): ?>
@@ -154,6 +157,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
             <td><?php echo $o['quantity']; ?></td>
             <td>¥<?php echo $o['total_price']; ?></td>
             <td class="order-action-cell" data-oid="<?php echo $o['id']; ?>">
+                <!-- 制作按钮：点击走JS 5秒进度条+sendBeacon完成 -->
                 <form method="POST" class="make-form make-form-inline">
                     <input type="hidden" name="order_id" value="<?php echo $o['id']; ?>">
                     <input type="hidden" name="complete" value="1">
@@ -170,7 +174,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
     <?php else: ?><p>暂无待处理订单 🎉</p><?php endif; ?>
 </section>
 
-<!-- 饮品管理 -->
+<!-- ══════════ 饮品管理 ══════════ -->
 <section id="stock" class="card">
     <h2>📋 饮品管理</h2>
     <table class="data-table">
@@ -180,6 +184,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
             <td><?php echo $d['id']; ?></td>
             <td class="drink-name">🧋 <?php echo htmlspecialchars($d['name']); ?></td>
             <td>
+                <!-- 价格显示 + 直接输入框 + 确定 -->
                 <span class="price">¥<?php echo number_format($d['price'], 2); ?></span>
                 <form method="POST" class="price-set-form">
                     <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
@@ -190,6 +195,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
                 </form>
             </td>
             <td>
+                <!-- 上架/售罄状态徽章 -->
                 <span class="status-badge <?php echo $d['available'] ? 'status-on' : 'status-off'; ?>">
                     <?php echo $d['available'] ? '✔ 上架中' : '✖ 已售罄'; ?>
                 </span>
@@ -204,6 +210,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         </tr>
         <?php endwhile; ?>
     </table>
+    <!-- 新增饮品表单：填名称+价格，可选图片 -->
     <h3 class="add-drink-title">➕ 新增饮品</h3>
     <form method="POST" class="inline-form" enctype="multipart/form-data">
         <input type="text" name="new_name" placeholder="饮品名称" required>
@@ -216,13 +223,14 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
     </form>
 </section>
 
-<!-- 营收统计 -->
+<!-- ══════════ 营收统计 ══════════ -->
 <section id="revenue" class="card">
     <h2>💰 营收统计</h2>
     <div class="stats">
         <div class="stat-box"><h3>¥<?php echo number_format($totalRevenue, 2); ?></h3><p>总营收</p></div>
         <div class="stat-box"><h3><?php echo $doneCount; ?></h3><p>已完成订单</p></div>
     </div>
+    <!-- 默认折叠，点开看已完成订单明细 -->
     <details class="revenue-details">
         <summary class="revenue-summary">
             📋 查看所有已完成订单 (<?php echo $doneCount; ?>单)
@@ -248,7 +256,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
     </details>
 </section>
 
-<!-- 顾客评价 -->
+<!-- ══════════ 顾客评价 ══════════ -->
 <section id="reviews" class="card">
     <h2>💬 顾客评价</h2>
     <?php while ($f = $feedback->fetch_assoc()): ?>
@@ -258,6 +266,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         <?php if ($f['reply']): ?>
         <p class="fb-reply">🧋 已回复：<?php echo nl2br(htmlspecialchars($f['reply'])); ?></p>
         <?php else: ?>
+        <!-- 还没回复的评价显示回复表单 -->
         <form method="POST" class="reply-form">
             <input type="hidden" name="fb_id" value="<?php echo $f['id']; ?>">
             <input type="text" name="reply_text" placeholder="回复…" required>
