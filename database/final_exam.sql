@@ -41,12 +41,12 @@ CREATE TABLE inventory (
 );
 
 INSERT INTO inventory (name, price, image, available) VALUES
-('招牌珍珠奶茶', 12.00, 'images/drinks/classic-pearl.jpg', 1),
-('茉莉绿奶茶', 11.00, 'images/drinks/jasmine-green.jpg', 1),
-('芋泥波波奶茶', 15.00, 'images/drinks/taro-boba.jpg', 1),
-('黑糖珍珠鲜奶', 16.00, 'images/drinks/brown-sugar.jpg', 1),
-('芝士莓莓', 18.00, 'images/drinks/berry-cheese.jpg', 1),
-('柠檬红茶', 10.00, 'images/drinks/lemon-tea.jpg', 1);
+('珍珠奶茶', 12.00, 'images/drinks/classic-pearl.jpg', 1),
+('椰果奶茶', 11.00, 'images/drinks/jasmine-green.jpg', 1),
+('红豆奶茶', 15.00, 'images/drinks/brown-sugar.jpg', 1),
+('抹茶拿铁', 16.00, 'images/drinks/taro-boba.jpg', 1),
+('杨枝甘露', 18.00, 'images/drinks/berry-cheese.jpg', 1),
+('柠檬绿茶', 10.00, 'images/drinks/lemon-tea.jpg', 1);
 
 -- Customer orders table
 CREATE TABLE orders (

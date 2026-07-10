@@ -19,12 +19,12 @@ function drink_image_src($name, $image) {
     }
 
     $fallbacks = [
-        '招牌珍珠奶茶' => 'classic-pearl.jpg',
-        '茉莉绿奶茶' => 'jasmine-green.jpg',
-        '芋泥波波奶茶' => 'taro-boba.jpg',
-        '黑糖珍珠鲜奶' => 'brown-sugar.jpg',
-        '芝士莓莓' => 'berry-cheese.jpg',
-        '柠檬红茶' => 'lemon-tea.jpg',
+        '珍珠奶茶' => 'classic-pearl.jpg',
+        '椰果奶茶' => 'jasmine-green.jpg',
+        '红豆奶茶' => 'brown-sugar.jpg',
+        '抹茶拿铁' => 'taro-boba.jpg',
+        '杨枝甘露' => 'berry-cheese.jpg',
+        '柠檬绿茶' => 'lemon-tea.jpg',
     ];
 
     return '../images/drinks/' . ($fallbacks[$name] ?? 'classic-pearl.jpg');
@@ -32,12 +32,12 @@ function drink_image_src($name, $image) {
 
 function drink_note($name) {
     $notes = [
-        '招牌珍珠奶茶' => '经典红茶奶底，珍珠软糯，适合第一次点单。',
-        '茉莉绿奶茶' => '茉莉茶香更清爽，甜度低一点也顺口。',
-        '芋泥波波奶茶' => '厚实芋泥加波波，口感更像甜品。',
-        '黑糖珍珠鲜奶' => '黑糖挂壁香气重，鲜奶口感更浓。',
-        '芝士莓莓' => '莓果酸甜配芝士奶盖，适合下午茶。',
-        '柠檬红茶' => '清爽解腻，冰饮风味更明显。',
+        '珍珠奶茶' => '经典红茶奶底，珍珠软糯有嚼劲。',
+        '椰果奶茶' => '椰果清甜爽口，搭配奶茶刚刚好。',
+        '红豆奶茶' => '绵密红豆配浓郁奶茶，暖胃首选。',
+        '抹茶拿铁' => '日式抹茶融入鲜奶，清新回甘。',
+        '杨枝甘露' => '芒果椰奶西米露，夏日必点甜品。',
+        '柠檬绿茶' => '清爽柠檬配绿茶，解腻解暑。',
     ];
 
     return $notes[$name] ?? '鲜奶茶底，可按口味备注给店员。';
