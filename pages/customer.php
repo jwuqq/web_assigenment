@@ -115,12 +115,19 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
 if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
-        $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
-        $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
-        if ($stmt->execute()) {
-            $msg = "✅ 留言已提交！";
+        // Anti-spam: prevent same message within 30s
+        $uid = $_SESSION['user_id'];
+        $dup = $conn->query("SELECT id FROM feedback WHERE user_id=$uid AND message='" . $conn->real_escape_string($msg_text) . "' AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)");
+        if ($dup->num_rows > 0) {
+            $error = "请勿重复提交相同内容！";
         } else {
-            $error = "留言提交失败，请稍后再试。";
+            $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
+            $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
+            if ($stmt->execute()) {
+                $msg = "✅ 留言已提交！";
+            } else {
+                $error = "留言提交失败，请稍后再试。";
+            }
         }
     }
 }
