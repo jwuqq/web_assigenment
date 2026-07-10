@@ -1,4 +1,5 @@
 <?php
+session_name('STAFF');
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'staff') {
     header('Location: index.php'); exit();
@@ -89,6 +90,13 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/index.css">
+<script>
+    setInterval(function(){
+        if (!document.querySelector('.progress-fill.active')) {
+            location.reload();
+        }
+    }, 8000);
+</script>
 </head>
 <body>
 <header>
@@ -120,9 +128,16 @@ $feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON 
             <td><?php echo $o['drink_name']; ?></td>
             <td><?php echo $o['quantity']; ?></td>
             <td>¥<?php echo $o['total_price']; ?></td>
-            <td>
-                <form method="POST"><input type="hidden" name="order_id" value="<?php echo $o['id']; ?>">
-                <button type="submit" name="complete" class="btn-sm">✅ 完成</button></form>
+            <td class="order-action-cell" data-oid="<?php echo $o['id']; ?>">
+                <form method="POST" class="make-form" style="display:inline">
+                    <input type="hidden" name="order_id" value="<?php echo $o['id']; ?>">
+                    <input type="hidden" name="complete" value="1">
+                    <button type="button" class="btn-sm btn-make" onclick="startMaking(this, <?php echo $o['id']; ?>)">🍵 制作</button>
+                </form>
+                <div class="progress-wrap" style="display:none; margin-top:4px;">
+                    <div class="progress-bar"><div class="progress-fill"></div></div>
+                    <span class="progress-label">制作中…</span>
+                </div>
             </td>
         </tr>
         <?php endwhile; ?>

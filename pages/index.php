@@ -117,6 +117,10 @@ if (isset($_POST['action']) && $_POST['action'] === 'login') {
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row['password'])) {
+                session_write_close();
+                $sessName = $row['role'] === 'staff' ? 'STAFF' : 'CUSTOMER';
+                session_name($sessName);
+                session_start();
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['username'] = $row['username'];
@@ -208,6 +212,9 @@ if (isset($_POST['action']) && $_POST['action'] === 'staff_login') {
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
             if (password_verify($s_password, $row['password'])) {
+                session_write_close();
+                session_name('STAFF');
+                session_start();
                 session_regenerate_id(true);
                 $_SESSION['user_id'] = $row['id'];
                 $_SESSION['username'] = $row['username'];

@@ -464,4 +464,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // === Staff: Order Making Progress Bar ===
+    window.startMaking = function(btn, oid) {
+        var cell = btn.closest('.order-action-cell');
+        var form = btn.closest('.make-form');
+        var progressWrap = cell.querySelector('.progress-wrap');
+        var progressFill = progressWrap.querySelector('.progress-fill');
+
+        // Hide button, show progress
+        btn.style.display = 'none';
+        progressWrap.style.display = 'block';
+
+        // Start 5s animation
+        progressFill.classList.add('active');
+
+        // Auto submit after 5s
+        setTimeout(function() {
+            form.submit();
+        }, 5000);
+    };
+
 });
