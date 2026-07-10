@@ -139,7 +139,7 @@ if ($todayRec->num_rows === 0) {
         $conn->query("INSERT INTO announcements (message) VALUES ('🌟 今日推荐：{$rand['name']} —— 试试看吧！')");
     }
 }
-$announcements = $conn->query("SELECT * FROM announcements ORDER BY created_at DESC LIMIT 5");
+$announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN message LIKE '🌟 今日推荐%' THEN 0 ELSE 1 END, created_at DESC LIMIT 5");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
