@@ -26,6 +26,9 @@ body {
     width: 128px;
     text-align: center;
 }
+.progress-hidden {
+    display: none;
+}
 .progress-bar {
     height: 6px;
     background: #eee;
@@ -60,6 +63,12 @@ body {
     padding-inline: 1rem;
     border-radius: 10px;
     font-weight: 700;
+}
+#orders tr {
+    transition: opacity 0.5s;
+}
+#orders tr.is-fading-out {
+    opacity: 0;
 }
 
 /* ===== Status badge ===== */

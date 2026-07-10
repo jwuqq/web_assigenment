@@ -10,8 +10,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!cell || !progressWrap || !progressFill || !row) return;
 
         btn.disabled = true;
-        btn.style.display = 'none';
-        progressWrap.style.display = 'block';
+        btn.classList.add('is-hidden');
+        progressWrap.classList.remove('progress-hidden');
 
         progressFill.classList.add('active');
 
@@ -26,11 +26,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 body: fd,
                 credentials: 'same-origin'
             }).finally(function () {
-                row.style.transition = 'opacity 0.5s';
-                row.style.opacity = '0';
+                row.classList.add('is-fading-out');
                 setTimeout(function() {
-                    row.style.display = 'none';
-                    var remaining = document.querySelectorAll('#orders tr:not([style*="display: none"]) .btn-make');
+                    row.classList.add('is-hidden');
+                    var remaining = document.querySelectorAll('#orders tr:not(.is-hidden) .btn-make:not(.is-hidden)');
                     if (remaining.length === 0) {
                         location.reload();
                     }

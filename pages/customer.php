@@ -212,8 +212,8 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     <h2>📢 店铺公告</h2>
     <?php if ($announcements && $announcements->num_rows > 0):
         while ($a = $announcements->fetch_assoc()): ?>
-    <p style="margin:0.4rem 0; font-size:0.95rem;"><?php echo htmlspecialchars($a['message']); ?>
-        <span style="color:#aaa; font-size:0.78rem; margin-left:0.5rem;"><?php echo $a['created_at']; ?></span></p>
+    <p class="announcement-item"><?php echo htmlspecialchars($a['message']); ?>
+        <span class="announcement-time"><?php echo $a['created_at']; ?></span></p>
     <?php endwhile; else: ?>
     <p class="empty-text">暂无公告</p>
     <?php endif; ?>

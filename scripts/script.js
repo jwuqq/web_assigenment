@@ -12,13 +12,11 @@ document.addEventListener('DOMContentLoaded', function () {
             var btn = this.querySelector('button[type="submit"]');
             if (btn) {
                 var originalText = btn.textContent;
-                btn.style.pointerEvents = 'none';
-                btn.style.opacity = '0.7';
+                btn.classList.add('is-submitting');
                 btn.innerHTML = '<span class="spinner"></span>处理中…';
                 // Re-enable after 5s in case of network issues (page will reload on success)
                 setTimeout(function () {
-                    btn.style.pointerEvents = 'auto';
-                    btn.style.opacity = '1';
+                    btn.classList.remove('is-submitting');
                     btn.textContent = originalText;
                 }, 5000);
             }
@@ -30,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
     msgs.forEach(function (msg) {
         setTimeout(function () {
             msg.classList.add('fade-out');
-            setTimeout(function () { msg.style.display = 'none'; }, 500);
+            setTimeout(function () { msg.classList.add('is-hidden'); }, 500);
         }, 4000);
     });
 

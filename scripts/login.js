@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.role-card').forEach(function (card) {
         card.addEventListener('click', function () {
             var role = this.getAttribute('data-role');
-            if (roleSelect) roleSelect.style.display = 'none';
+            if (roleSelect) roleSelect.classList.add('is-hidden');
             if (role === 'customer' && customerPanel) {
                 customerPanel.classList.add('active');
             } else if (role === 'staff' && staffPanel) {
@@ -30,10 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
             if (customerPanel) customerPanel.classList.remove('active');
             if (staffPanel) staffPanel.classList.remove('active');
             if (roleSelect) {
-                roleSelect.style.display = 'block';
-                roleSelect.style.animation = 'none';
+                roleSelect.classList.remove('is-hidden', 'animate-in');
                 roleSelect.offsetHeight;
-                roleSelect.style.animation = 'fadeInUp 0.6s ease';
+                roleSelect.classList.add('animate-in');
             }
         });
     });
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var panel = document.getElementById('tab-' + target);
             if (panel) panel.classList.add('active');
             // Clear messages
-            document.querySelectorAll('.msg').forEach(function (m) { m.style.display = 'none'; });
+            document.querySelectorAll('.msg').forEach(function (m) { m.classList.add('is-hidden'); });
         });
     });
 

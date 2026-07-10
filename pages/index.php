@@ -210,7 +210,7 @@ $conn->close();
     <div class="login-card">
 
         <!-- ========== VIEW 1: 角色选择 ========== -->
-        <div id="role-select" class="role-select"<?php echo $view !== 'role' ? ' style="display:none"' : ''; ?>>
+        <div id="role-select" class="role-select animate-in<?php echo $view !== 'role' ? ' is-hidden' : ''; ?>">
             <h1><span class="logo-icon swinging">🧋</span> 在超市后门偷喝奶茶的二人</h1>
             <p class="login-subtitle">来杯好茶爻一爻，吉星高照爻一爻</p>
 

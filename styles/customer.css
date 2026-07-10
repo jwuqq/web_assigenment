@@ -74,6 +74,15 @@ body {
     background: #f3e5f5;
     border-left: 4px solid #6a1b9a;
 }
+.announcement-item {
+    margin: 0.4rem 0;
+    font-size: 0.95rem;
+}
+.announcement-time {
+    margin-left: 0.5rem;
+    color: #aaa;
+    font-size: 0.78rem;
+}
 .section-head {
     display: flex;
     justify-content: space-between;
