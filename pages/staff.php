@@ -206,9 +206,12 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
     </table>
     <h3 style="margin-top:1rem">➕ 新增饮品</h3>
     <form method="POST" class="inline-form" enctype="multipart/form-data">
-        <input type="text" name="new_name" placeholder="名称" required>
+        <input type="text" name="new_name" placeholder="饮品名称" required>
         <input type="number" name="new_price" placeholder="价格" step="0.01" min="0.01" required>
-        <input type="file" name="drink_image" accept="image/*" style="font-size:0.85rem;">
+        <label class="file-pick">
+            <span id="file-name">📁 选择图片</span>
+            <input type="file" name="drink_image" accept="image/*" hidden onchange="this.previousElementSibling.textContent='📷 '+this.files[0].name">
+        </label>
         <button type="submit" name="add_drink" class="btn-sm">添加</button>
     </form>
 </section>

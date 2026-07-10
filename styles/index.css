@@ -987,6 +987,24 @@ textarea:focus { outline: none; border-color: #6a1b9a; }
 .btn-off { background: #ef5350; }
 .btn-off:hover { background: #e53935; }
 
+/* ===== File pick button ===== */
+.file-pick {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: #f3e5f5;
+    border: 2px dashed #ce93d8;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #6a1b9a;
+    transition: all 0.2s;
+}
+.file-pick:hover {
+    background: #ede7f6;
+    border-color: #6a1b9a;
+}
+
 /* ===== Drink name & status art ===== */
 .drink-name {
     font-size: 1.05rem;
