@@ -45,3 +45,5 @@ if ($conn->connect_error) {
 }
 
 $conn->set_charset('utf8mb4');
+// 云端时区修正：InfinityFree服务器在美国，手动设成北京时间
+$conn->query("SET time_zone = '+08:00'");
