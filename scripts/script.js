@@ -159,11 +159,13 @@ document.addEventListener('DOMContentLoaded', function () {
             var btn = this.querySelector('button[type="submit"]');
             if (btn) {
                 var originalText = btn.textContent;
-                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+                btn.style.opacity = '0.7';
                 btn.innerHTML = '<span class="spinner"></span>处理中…';
                 // Re-enable after 5s in case of network issues (page will reload on success)
                 setTimeout(function () {
-                    btn.disabled = false;
+                    btn.style.pointerEvents = 'auto';
+                    btn.style.opacity = '1';
                     btn.textContent = originalText;
                 }, 5000);
             }

@@ -1,10 +1,4 @@
 <?php
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Pragma: no-cache');
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    die('METHOD=' . $_SERVER['REQUEST_METHOD'] . ' | POST_keys=' . implode(',', array_keys($_POST)));
-}
 session_name('CUSTOMER');
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'customer') {
@@ -121,18 +115,12 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
 if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
-        // Debug: ensure session vars exist
-        if (empty($_SESSION['user_id'])) {
-            $error = "Session 丢失，请重新登录。";
+        $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
+        $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
+        if ($stmt->execute()) {
+            $msg = "✅ 留言已提交！";
         } else {
-            $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
-            $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
-            if ($stmt->execute()) {
-                $msg = "✅ 留言已提交！(ID=" . $stmt->insert_id . ")";
-                error_log("Feedback inserted: ID=" . $stmt->insert_id . " user=" . $_SESSION['username']);
-            } else {
-                $error = "留言提交失败: " . $stmt->error;
-            }
+            $error = "留言提交失败，请稍后再试。";
         }
     }
 }
