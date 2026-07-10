@@ -115,11 +115,11 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
 if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
-        // Anti-spam: prevent same message within 30s
+        // Anti-spam: only one feedback per 30s per user
         $uid = $_SESSION['user_id'];
-        $dup = $conn->query("SELECT id FROM feedback WHERE user_id=$uid AND message='" . $conn->real_escape_string($msg_text) . "' AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)");
-        if ($dup->num_rows > 0) {
-            $error = "请勿重复提交相同内容！";
+        $recent = $conn->query("SELECT id FROM feedback WHERE user_id=$uid AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)");
+        if ($recent->num_rows > 0) {
+            $error = "30 秒内只能提交一条留言！";
         } else {
             $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
             $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
@@ -289,7 +289,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 <!-- 留言反馈 -->
 <section id="fb" class="card">
     <h2>💬 留言反馈</h2>
-    <form method="POST" action="">
+    <form method="POST" action="" autocomplete="off">
         <textarea name="message" rows="3" placeholder="告诉我们你的想法…" required></textarea>
         <button type="submit" name="feedback" class="btn-primary">提交反馈</button>
     </form>
