@@ -12,6 +12,7 @@ require_once __DIR__ . '/db.php';
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>在超市后门偷喝奶茶的二人</title>
 <link rel="stylesheet" href="../styles/index.css">
+<link rel="stylesheet" href="../styles/login.css">
 </head>
 <body>
 <header>

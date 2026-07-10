@@ -1,0 +1,138 @@
+/* ============================
+   MilkTea Shop — Main Stylesheet
+   ============================ */
+
+/* Reset */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 86px;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(255, 232, 183, 0.55), transparent 32%),
+        radial-gradient(circle at top right, rgba(187, 222, 251, 0.5), transparent 30%),
+        linear-gradient(135deg, #fff7f0 0%, #f6eef9 45%, #eef8f4 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+
+/* ===== Order making progress bar ===== */
+.progress-wrap {
+    width: 120px;
+    text-align: center;
+}
+.progress-bar {
+    height: 6px;
+    background: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #6a1b9a, #8e24aa);
+    border-radius: 3px;
+    transition: width 0.1s linear;
+}
+.progress-fill.active {
+    animation: fillBar 5s linear forwards;
+}
+@keyframes fillBar {
+    0%   { width: 0; }
+    100% { width: 100%; }
+}
+.progress-label {
+    font-size: 0.75rem;
+    color: #6a1b9a;
+    margin-top: 2px;
+}
+.btn-make:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Status badge ===== */
+.status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.status-on { background: #e8f5e9; color: #2e7d32; }
+.status-off { background: #fce4ec; color: #c62828; }
+.btn-on { background: #43a047; }
+.btn-on:hover { background: #388e3c; }
+.btn-off { background: #ef5350; }
+.btn-off:hover { background: #e53935; }
+
+/* ===== File pick button ===== */
+.file-pick {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: #f3e5f5;
+    border: 2px dashed #ce93d8;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #6a1b9a;
+    transition: all 0.2s;
+}
+.file-pick:hover {
+    background: #ede7f6;
+    border-color: #6a1b9a;
+}
+
+/* ===== Drink name & status art ===== */
+.drink-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #6a1b9a;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 0 rgba(106,27,154,0.1);
+}
+
+/* ===== Staff drink-price form ===== */
+.price-set-form {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-top: 4px;
+}
+.price-set-form .price-input,
+.price-input {
+    width: 70px;
+    padding: 0.3rem;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+/* ===== Utility classes (replacing inline styles) ===== */
+.empty-text { color: #999; }
+.make-form-inline { display: inline; }
+.progress-hidden { display: none; margin-top: 4px; }
+.form-inline { display: inline; }
+.add-drink-title { margin-top: 1rem; }
+.revenue-details { margin-top: 1rem; }
+.revenue-summary {
+    cursor: pointer;
+    color: #6a1b9a;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.revenue-detail-body {
+    margin-top: 0.8rem;
+    max-height: 400px;
+    overflow-y: auto;
+}

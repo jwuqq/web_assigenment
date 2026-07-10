@@ -121,7 +121,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/index.css">
+<title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/staff.css">
 </head>
 <body>
 <header>

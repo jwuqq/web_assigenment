@@ -164,7 +164,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>在超市后门偷喝奶茶的二人 — 顾客</title><link rel="stylesheet" href="../styles/index.css">
+<title>在超市后门偷喝奶茶的二人 — 顾客</title><link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/customer.css">
 </head>
 <body>
 <header>
