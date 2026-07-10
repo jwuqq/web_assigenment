@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
 
+    // === Logo icon: first hover triggers permanent swing ===
+    document.querySelectorAll('.logo-icon').forEach(function (el) {
+        el.addEventListener('mouseenter', function () {
+            this.classList.add('swinging');
+        }, { once: true });
+    });
+
     // === Role Selection ===
     var roleSelect = document.getElementById('role-select');
     var customerPanel = document.getElementById('customer-panel');

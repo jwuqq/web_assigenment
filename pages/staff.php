@@ -178,19 +178,19 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         <?php while ($d = $inventory->fetch_assoc()): ?>
         <tr>
             <td><?php echo $d['id']; ?></td>
-            <td style="font-size:1.05rem;font-weight:700;color:#6a1b9a;letter-spacing:0.5px;">🧋 <?php echo htmlspecialchars($d['name']); ?></td>
+            <td class="drink-name">🧋 <?php echo htmlspecialchars($d['name']); ?></td>
             <td>
                 <span class="price">¥<?php echo number_format($d['price'], 2); ?></span>
-                <form method="POST" style="display:flex; gap:4px; align-items:center; margin-top:4px;">
+                <form method="POST" class="price-set-form">
                     <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
                     <input type="hidden" name="update_price" value="1">
                     <input type="hidden" name="price_action" value="set">
-                    <input type="number" name="new_price" step="0.01" min="0" value="<?php echo number_format($d['price'], 2); ?>" style="width:70px; padding:0.3rem; text-align:center; border:1px solid #ddd; border-radius:6px; font-size:0.85rem;">
+                    <input type="number" name="new_price" step="0.01" min="0" value="<?php echo number_format($d['price'], 2); ?>" class="price-input">
                     <button type="submit" class="btn-sm">确定</button>
                 </form>
             </td>
             <td>
-                <span class="status-badge <?php echo $d['available'] ? 'status-on' : 'status-off'; ?>" style="font-weight:600;letter-spacing:1px;text-transform:uppercase;">
+                <span class="status-badge <?php echo $d['available'] ? 'status-on' : 'status-off'; ?>">
                     <?php echo $d['available'] ? '✔ 上架中' : '✖ 已售罄'; ?>
                 </span>
             </td>

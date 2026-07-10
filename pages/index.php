@@ -17,45 +17,8 @@ if (isset($_SESSION['role'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>在超市后门偷喝奶茶的二人 — 登录</title>
     <link rel="stylesheet" href="../styles/index.css">
-    <style>
-        body {
-            overflow: hidden;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            inset: -10%;
-            background: url('../images/index/preview.jpg') center/cover no-repeat;
-            animation: bgPan 20s ease-in-out infinite alternate;
-            z-index: -1;
-        }
-        @keyframes bgPan {
-            0%   { transform: scale(1) translate(0, 0); }
-            100% { transform: scale(1.1) translate(-1%, -0.5%); }
-        }
-        .login-container {
-            position: relative;
-            z-index: 1;
-        }
-        .login-card {
-            max-width: 660px;
-            padding: 3rem;
-        }
-        .logo-icon {
-            display: inline-block;
-            cursor: pointer;
-            font-size: 1.6em;
-        }
-        .logo-icon.swinging {
-            animation: swing 1.5s ease-in-out infinite;
-        }
-        @keyframes swing {
-            0%, 100% { transform: rotate(-45deg); }
-            50%      { transform: rotate(45deg); }
-        }
-    </style>
 </head>
-<body>
+<body class="login-page">
 <?php
 require_once __DIR__ . '/../includes/db.php';
 
@@ -446,15 +409,7 @@ $conn->close();
 
     </div>
 </div>
-
-<script>
-    // 奶茶图标：首次悬停后永久摇晃
-    document.querySelectorAll('.logo-icon').forEach(function (el) {
-        el.addEventListener('mouseenter', function () {
-            this.classList.add('swinging');
-        }, { once: true });
-    });
-</script>
+<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144</footer>
 <script src="../scripts/script.js"></script>
 </body>
 </html>
