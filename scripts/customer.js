@@ -148,15 +148,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             cart[id].qty = Math.min(10, cart[id].qty + qty);
             renderCart();
+            if (card) {
+                card.classList.remove('cart-added');
+                card.offsetHeight;
+                card.classList.add('cart-added');
+                setTimeout(function () {
+                    card.classList.remove('cart-added');
+                }, 650);
+            }
             btn.textContent = '已加入';
+            btn.classList.add('is-added');
+            btn.blur();
             setTimeout(function () {
                 btn.textContent = '加入购物车';
+                btn.classList.remove('is-added');
             }, 900);
-
-            var cartSection = document.getElementById('cart');
-            if (cartSection) {
-                cartSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
         });
     });
 

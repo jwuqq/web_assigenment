@@ -166,9 +166,8 @@ body {
 }
 .drink-card:focus-within {
     z-index: 5;
-    transform: translateY(-7px) scale(1.045);
     border-color: rgba(106,27,154,0.24);
-    box-shadow: 0 18px 38px rgba(75, 43, 77, 0.18);
+    box-shadow: 0 0 0 3px rgba(106,27,154,0.08);
 }
 .drink-photo {
     width: 100%;
@@ -178,9 +177,18 @@ body {
     background: #f5f0f6;
     transition: transform 0.35s ease;
 }
-.drink-card:hover .drink-photo,
-.drink-card:focus-within .drink-photo {
+.drink-card:hover .drink-photo {
     transform: scale(1.06);
+}
+.drink-card.cart-added {
+    border-color: rgba(230,81,0,0.5);
+    box-shadow: 0 0 0 4px rgba(230,81,0,0.12), 0 12px 26px rgba(75,43,77,0.12);
+    animation: cartAddedPulse 0.55s ease;
+}
+@keyframes cartAddedPulse {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.018); }
+    100% { transform: scale(1); }
 }
 .drink-info {
     padding: 1rem 1rem 0;
@@ -262,6 +270,9 @@ body {
 }
 .btn-add-cart:hover {
     background: #bf4300;
+}
+.btn-add-cart.is-added {
+    background: #43a047;
 }
 
 /* ===== Cart ===== */
@@ -419,8 +430,7 @@ body {
     .drink-card:focus-within {
         transform: none;
     }
-    .drink-card:hover .drink-photo,
-    .drink-card:focus-within .drink-photo {
+    .drink-card:hover .drink-photo {
         transform: none;
     }
     .drink-info {
