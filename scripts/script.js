@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // === Form Submit — Loading State ===
+    // 表单提交加载状态
     document.querySelectorAll('form').forEach(function (form) {
         form.addEventListener('submit', function () {
             if (form.classList.contains('js-order-form') && form.dataset.confirmed !== '1') {
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // === Auto-fade messages after 4 seconds ===
+    // 提示消息4秒自动消失
     var msgs = document.querySelectorAll('.msg');
     msgs.forEach(function (msg) {
         setTimeout(function () {
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 4000);
     });
 
-    // === Mobile navigation ===
+    // 手机端汉堡菜单
     var navToggle = document.querySelector('.nav-toggle');
     var navLinks = document.querySelector('.nav-links');
     if (navToggle && navLinks) {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // === Smooth in-page navigation ===
+    // 锚点平滑滚动
     document.querySelectorAll('.nav-links a[href^="#"]').forEach(function (link) {
         link.addEventListener('click', function (e) {
             var target = document.querySelector(link.getAttribute('href'));

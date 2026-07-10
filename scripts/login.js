@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // === Logo icon: first hover triggers permanent swing ===
+    // 奶茶图标首次悬停永久摇晃
     document.querySelectorAll('.logo-icon').forEach(function (el) {
         el.addEventListener('mouseenter', function () {
             this.classList.add('swinging');
         }, { once: true });
     });
 
-    // === Role Selection ===
+    // 角色选择切换
     var roleSelect = document.getElementById('role-select');
     var customerPanel = document.getElementById('customer-panel');
     var staffPanel = document.getElementById('staff-panel');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // === Tab Switching ===
+    // Tab切换
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // === Password Toggle (show/hide) ===
+    // 密码显示/隐藏切换
     document.querySelectorAll('.pw-toggle').forEach(function (btn) {
         btn.addEventListener('click', function () {
             var input = document.getElementById(this.getAttribute('data-target'));
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // === Password Strength Meter ===
+    // 密码强度检测
     var regPassword = document.getElementById('reg-password');
     var strengthBar = document.getElementById('pw-strength-bar');
     var strengthText = document.getElementById('pw-strength-text');
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // === Confirm Password Real-time Match ===
+    // 确认密码实时匹配
     var regConfirm = document.getElementById('reg-confirm');
     var confirmHint = document.getElementById('confirm-hint');
 
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         regConfirm.addEventListener('input', checkMatch);
     }
 
-    // === Forgot Password — Confirm Match ===
+    // 找回密码-确认新密码匹配
     var fgNewpass = document.getElementById('fg-newpass');
     var fgConfirm = document.getElementById('fg-confirm');
     var fgConfirmHint = document.getElementById('fg-confirm-hint');
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // === Form Validation: Register (fallback) ===
+    // 注册表单提交前校验兜底
     var regForm = document.querySelector('#tab-register');
     if (regForm) {
         regForm.addEventListener('submit', function (e) {
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // === Form Validation: Forgot Password (fallback) ===
+    // 找回密码表单提交前校验兜底
     var fgForm = document.querySelector('#tab-forgot');
     if (fgForm) {
         fgForm.addEventListener('submit', function (e) {

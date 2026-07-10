@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // === Staff: Order Making Progress Bar ===
+    // 订单制作进度条
     window.startMaking = function(btn, oid) {
         var cell = btn.closest('.order-action-cell');
         var form = btn.closest('.make-form');
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     };
 
-    // === Staff: AJAX price +/- ===
+    // 调价按钮AJAX
     document.querySelectorAll('.ajax-price-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             var id = this.dataset.id;

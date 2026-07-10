@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    // === Customer menu search ===
+    // 饮品搜索过滤
     var drinkSearch = document.getElementById('drink-search');
     var drinkCards = document.querySelectorAll('.drink-card[data-name]');
     var drinkEmpty = document.getElementById('drink-empty');
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // === Shopping cart ===
+    // 购物车逻辑
     var orderModal = document.getElementById('order-modal');
     var orderModalText = document.getElementById('order-modal-text');
     var cartList = document.getElementById('cart-list');
