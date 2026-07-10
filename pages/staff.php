@@ -64,10 +64,12 @@ if (isset($_POST['update_price'])) {
             $newPrice = max(0, $oldPrice - 1);
         } elseif ($_POST['price_action'] === 'set') {
             $newPrice = max(0, floatval($_POST['new_price']));
+            if ($newPrice != $oldPrice) {
+                $conn->query("INSERT INTO announcements (message) VALUES ('💰 {$drink['name']} 价格调整：¥" . number_format($oldPrice, 2) . " → ¥" . number_format($newPrice, 2) . "')");
+            }
+            $msg = "✅ 价格已更新：" . $drink['name'];
         }
         $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
-        $conn->query("INSERT INTO announcements (message) VALUES ('💰 {$drink['name']} 价格调整：¥" . number_format($oldPrice, 2) . " → ¥" . number_format($newPrice, 2) . "')");
-        $msg = "✅ 价格已更新：" . $drink['name'];
     }
 }
 
