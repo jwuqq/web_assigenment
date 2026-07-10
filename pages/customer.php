@@ -130,9 +130,16 @@ $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $myOrders = $stmt->get_result();
+// Auto-generate today's recommendation if not exists
+$today = date('Y-m-d');
+$todayRec = $conn->query("SELECT id FROM announcements WHERE message LIKE '🌟 今日推荐%' AND DATE(created_at)='$today'");
+if ($todayRec->num_rows === 0) {
+    $rand = $conn->query("SELECT name FROM inventory WHERE available=1 ORDER BY RAND() LIMIT 1")->fetch_assoc();
+    if ($rand) {
+        $conn->query("INSERT INTO announcements (message) VALUES ('🌟 今日推荐：{$rand['name']} —— 试试看吧！')");
+    }
+}
 $announcements = $conn->query("SELECT * FROM announcements ORDER BY created_at DESC LIMIT 5");
-// Random daily recommendation
-$randDrink = $conn->query("SELECT name FROM inventory WHERE available=1 ORDER BY RAND() LIMIT 1")->fetch_assoc();
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -174,9 +181,6 @@ $randDrink = $conn->query("SELECT name FROM inventory WHERE available=1 ORDER BY
 <!-- 公告栏 -->
 <section class="card announcement-card">
     <h2>📢 店铺公告</h2>
-    <?php if ($randDrink): ?>
-    <p style="margin:0.4rem 0; font-size:1rem;">🌟 <strong>今日推荐：<?php echo htmlspecialchars($randDrink['name']); ?></strong> —— 试试看吧！</p>
-    <?php endif; ?>
     <?php if ($announcements && $announcements->num_rows > 0):
         while ($a = $announcements->fetch_assoc()): ?>
     <p style="margin:0.4rem 0; font-size:0.95rem;"><?php echo htmlspecialchars($a['message']); ?>
