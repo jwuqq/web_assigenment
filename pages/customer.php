@@ -115,18 +115,21 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
 if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
-        // Anti-spam: only one feedback per 30s per user
-        $uid = $_SESSION['user_id'];
-        $recent = $conn->query("SELECT id FROM feedback WHERE user_id=$uid AND created_at > DATE_SUB(NOW(), INTERVAL 30 SECOND)");
-        if ($recent->num_rows > 0) {
-            $error = "30 秒内只能提交一条留言！";
+        if (mb_strlen($msg_text) < 3) {
+            $error = "留言至少 3 个字，多说两句吧！";
         } else {
-            $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
-            $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
-            if ($stmt->execute()) {
-                $msg = "✅ 留言已提交！";
+            $uid = $_SESSION['user_id'];
+            $recent = $conn->query("SELECT id FROM feedback WHERE user_id=$uid AND created_at > DATE_SUB(NOW(), INTERVAL 2 MINUTE)");
+            if ($recent->num_rows > 0) {
+                $error = "2 分钟内只能提交一条留言！";
             } else {
-                $error = "留言提交失败，请稍后再试。";
+                $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
+                $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
+                if ($stmt->execute()) {
+                    $msg = "✅ 留言已提交！";
+                } else {
+                    $error = "留言提交失败，请稍后再试。";
+                }
             }
         }
     }
