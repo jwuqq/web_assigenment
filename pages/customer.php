@@ -205,7 +205,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     <p style="margin:0.4rem 0; font-size:0.95rem;"><?php echo htmlspecialchars($a['message']); ?>
         <span style="color:#aaa; font-size:0.78rem; margin-left:0.5rem;"><?php echo $a['created_at']; ?></span></p>
     <?php endwhile; else: ?>
-    <p style="color:#999;">暂无公告</p>
+    <p class="empty-text">暂无公告</p>
     <?php endif; ?>
 </section>
 

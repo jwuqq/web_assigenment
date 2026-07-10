@@ -1063,3 +1063,22 @@ body.login-page::before {
     border-radius: 6px;
     font-size: 0.85rem;
 }
+
+/* ===== Utility classes (replacing inline styles) ===== */
+.empty-text { color: #999; }
+.make-form-inline { display: inline; }
+.progress-hidden { display: none; margin-top: 4px; }
+.form-inline { display: inline; }
+.add-drink-title { margin-top: 1rem; }
+.revenue-details { margin-top: 1rem; }
+.revenue-summary {
+    cursor: pointer;
+    color: #6a1b9a;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+.revenue-detail-body {
+    margin-top: 0.8rem;
+    max-height: 400px;
+    overflow-y: auto;
+}

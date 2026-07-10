@@ -154,12 +154,12 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
             <td><?php echo $o['quantity']; ?></td>
             <td>¥<?php echo $o['total_price']; ?></td>
             <td class="order-action-cell" data-oid="<?php echo $o['id']; ?>">
-                <form method="POST" class="make-form" style="display:inline">
+                <form method="POST" class="make-form make-form-inline">
                     <input type="hidden" name="order_id" value="<?php echo $o['id']; ?>">
                     <input type="hidden" name="complete" value="1">
                     <button type="button" class="btn-sm btn-make" onclick="startMaking(this, <?php echo $o['id']; ?>)">🍵 制作</button>
                 </form>
-                <div class="progress-wrap" style="display:none; margin-top:4px;">
+                <div class="progress-wrap progress-hidden">
                     <div class="progress-bar"><div class="progress-fill"></div></div>
                     <span class="progress-label">制作中…</span>
                 </div>
@@ -195,7 +195,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
                 </span>
             </td>
             <td>
-                <form method="POST" style="display:inline">
+                <form method="POST" class="form-inline">
                     <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
                     <button type="submit" name="toggle" class="btn-sm <?php echo $d['available'] ? 'btn-off' : 'btn-on'; ?>"><?php echo $d['available'] ? '设为售罄' : '设为上架'; ?></button>
                     <button type="submit" name="delete_drink" class="btn-sm btn-danger" onclick="return confirm('确认删除？')">删除</button>
@@ -204,7 +204,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         </tr>
         <?php endwhile; ?>
     </table>
-    <h3 style="margin-top:1rem">➕ 新增饮品</h3>
+    <h3 class="add-drink-title">➕ 新增饮品</h3>
     <form method="POST" class="inline-form" enctype="multipart/form-data">
         <input type="text" name="new_name" placeholder="饮品名称" required>
         <input type="number" name="new_price" placeholder="价格" step="0.01" min="0.01" required>
@@ -223,11 +223,11 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         <div class="stat-box"><h3>¥<?php echo number_format($totalRevenue, 2); ?></h3><p>总营收</p></div>
         <div class="stat-box"><h3><?php echo $doneCount; ?></h3><p>已完成订单</p></div>
     </div>
-    <details style="margin-top:1rem;">
-        <summary style="cursor:pointer; color:#6a1b9a; font-weight:600; font-size:0.95rem;">
+    <details class="revenue-details">
+        <summary class="revenue-summary">
             📋 查看所有已完成订单 (<?php echo $doneCount; ?>单)
         </summary>
-        <div style="margin-top:0.8rem; max-height:400px; overflow-y:auto;">
+        <div class="revenue-detail-body">
         <?php if ($doneOrders && $doneOrders->num_rows > 0): ?>
         <table class="data-table">
             <tr><th>顾客</th><th>饮品</th><th>数量</th><th>金额</th><th>完成时间</th></tr>
@@ -242,7 +242,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
             <?php endwhile; ?>
         </table>
         <?php else: ?>
-        <p style="color:#999;">暂无已完成订单</p>
+        <p class="empty-text">暂无已完成订单</p>
         <?php endif; ?>
         </div>
     </details>
