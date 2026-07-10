@@ -32,6 +32,7 @@ $view = 'role';         // 'role' | 'customer' | 'staff' — tracks which panel 
 // ── 顾客注册：验证两次密码一致，密码加密存库 ──
 if (isset($_POST['action']) && $_POST['action'] === 'register') {
     $view = 'customer';
+    $activeTab = 'register';
     $username = trim($_POST['reg_username']);
     $email = trim($_POST['reg_email']);
     $password = $_POST['reg_password'];
@@ -41,6 +42,8 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
 
     if (empty($username) || empty($email) || empty($password) || empty($question) || empty($answer)) {
         $error = '所有字段都必须填写。';
+    } elseif (strcasecmp($username, 'milktea') === 0) {
+        $error = 'milktea 是店员专用账号，不能注册为顾客。';
     } elseif ($password !== $confirm) {
         $error = '两次密码输入不一致。';
     } elseif (strlen($password) < 6) {
@@ -69,11 +72,14 @@ if (isset($_POST['action']) && $_POST['action'] === 'register') {
 // ── 顾客登录：查库验证，按角色跳转 ──
 if (isset($_POST['action']) && $_POST['action'] === 'login') {
     $view = 'customer';
+    $activeTab = 'login';
     $username = trim($_POST['login_username']);
     $password = $_POST['login_password'];
 
     if (empty($username) || empty($password)) {
         $error = '请输入用户名和密码。';
+    } elseif (strcasecmp($username, 'milktea') === 0) {
+        $error = 'milktea 是店员账号，请从“我是店员”入口登录。';
     } else {
         $stmt = $conn->prepare("SELECT id,username,password,role FROM users WHERE username = ?");
         $stmt->bind_param("s", $username);

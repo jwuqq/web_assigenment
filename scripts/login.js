@@ -159,14 +159,30 @@ document.addEventListener('DOMContentLoaded', function () {
     var regForm = document.querySelector('#tab-register');
     if (regForm) {
         regForm.addEventListener('submit', function (e) {
+            var username = document.getElementById('reg-username');
             var pw = document.getElementById('reg-password');
             var cf = document.getElementById('reg-confirm');
             var errors = [];
+            if (username && username.value.trim().toLowerCase() === 'milktea') {
+                errors.push('milktea 是店员专用账号，不能注册为顾客');
+            }
             if (pw.value.length < 6) errors.push('密码至少 6 位');
             if (pw.value !== cf.value) errors.push('两次密码输入不一致');
             if (errors.length > 0) {
                 e.preventDefault();
                 alert(errors.join('\n'));
+            }
+        });
+    }
+
+    // 顾客登录禁止使用店员账号
+    var customerLoginForm = document.querySelector('#tab-login');
+    if (customerLoginForm) {
+        customerLoginForm.addEventListener('submit', function (e) {
+            var username = document.getElementById('login-username');
+            if (username && username.value.trim().toLowerCase() === 'milktea') {
+                e.preventDefault();
+                alert('milktea 是店员账号，请从“我是店员”入口登录');
             }
         });
     }
