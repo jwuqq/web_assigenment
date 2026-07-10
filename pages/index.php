@@ -409,7 +409,7 @@ $conn->close();
 
     </div>
 </div>
-<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144</footer>
+<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144 | GitHub: jwuqq</footer>
 <script src="../scripts/script.js"></script>
 </body>
 </html>

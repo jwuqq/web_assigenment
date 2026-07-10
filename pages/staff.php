@@ -269,6 +269,6 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
 </section>
 </main>
 
-<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144</footer>
+<footer>© 2026 在超市后门偷喝奶茶的二人 — wangkun 24160144 | GitHub: jwuqq</footer>
 <script src="../scripts/script.js"></script>
 </body></html>
