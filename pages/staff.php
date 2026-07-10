@@ -83,7 +83,7 @@ $inventory = $conn->query("SELECT * FROM inventory ORDER BY id");
 $totalRevenue = $conn->query("SELECT SUM(amount) AS total FROM revenue")->fetch_assoc()['total'] ?? 0;
 $doneCount = $conn->query("SELECT COUNT(*) AS c FROM orders WHERE status='done'")->fetch_assoc()['c'];
 $doneOrders = $conn->query("SELECT r.*, u.username FROM revenue r LEFT JOIN orders o ON r.order_id = o.id LEFT JOIN users u ON o.user_id = u.id ORDER BY r.created_at DESC");
-$feedback = $conn->query("SELECT f.*,u.username FROM feedback f JOIN users u ON f.user_id=u.id ORDER BY f.created_at DESC");
+$feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
 ?>
 <!DOCTYPE html>
 <html lang="zh-CN">
