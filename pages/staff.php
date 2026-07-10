@@ -189,11 +189,15 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
                     <button type="submit" class="btn-sm">确定</button>
                 </form>
             </td>
-            <td><?php echo $d['available'] ? '🟢 上架' : '🔴 售罄'; ?></td>
+            <td>
+                <span class="status-badge <?php echo $d['available'] ? 'status-on' : 'status-off'; ?>">
+                    <?php echo $d['available'] ? '✔ 在售' : '✖ 售罄'; ?>
+                </span>
+            </td>
             <td>
                 <form method="POST" style="display:inline">
                     <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
-                    <button type="submit" name="toggle" class="btn-sm"><?php echo $d['available'] ? '售罄' : '上架'; ?></button>
+                    <button type="submit" name="toggle" class="btn-sm <?php echo $d['available'] ? 'btn-off' : 'btn-on'; ?>"><?php echo $d['available'] ? '设为售罄' : '设为上架'; ?></button>
                     <button type="submit" name="delete_drink" class="btn-sm btn-danger" onclick="return confirm('确认删除？')">删除</button>
                 </form>
             </td>
