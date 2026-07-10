@@ -409,7 +409,7 @@ $conn->close();
 
     </div>
 </div>
-<a href="zhuangb.php" style="position:fixed; bottom:50px; right:20px; font-size:2rem; text-decoration:none; z-index:999;" title="😎">😎😎</a>
+<a href="zhuangb.php" class="easter-egg" title="你真的要看吗">😎😎</a>
 <footer>在超市后门偷喝奶茶的二人 — Wang Kun 24160144 & Hu Jiaming 24160064</footer>
 <script src="../scripts/script.js"></script>
 </body>

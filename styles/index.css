@@ -1082,3 +1082,17 @@ body.login-page::before {
     max-height: 400px;
     overflow-y: auto;
 }
+
+/* ===== Easter egg 😎 ===== */
+.easter-egg {
+    position: fixed;
+    bottom: 50px;
+    right: 20px;
+    font-size: 2rem;
+    text-decoration: none;
+    z-index: 999;
+    transition: transform 0.3s;
+}
+.easter-egg:hover {
+    transform: scale(1.5);
+}
