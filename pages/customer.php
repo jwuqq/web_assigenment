@@ -115,12 +115,17 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
 if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
-        $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
-        $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
-        if ($stmt->execute()) {
-            $msg = "✅ 留言已提交！";
+        // Debug: ensure session vars exist
+        if (empty($_SESSION['user_id'])) {
+            $error = "Session 丢失，请重新登录。";
         } else {
-            $error = "留言提交失败，请稍后再试。";
+            $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
+            $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
+            if ($stmt->execute()) {
+                $msg = "✅ 留言已提交！";
+            } else {
+                $error = "留言提交失败: " . $stmt->error;
+            }
         }
     }
 }
