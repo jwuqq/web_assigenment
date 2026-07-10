@@ -116,24 +116,29 @@ if (isset($_POST['feedback'])) {
     $msg_text = trim($_POST['message']);
     if (!empty($msg_text)) {
         if (mb_strlen($msg_text) < 3) {
-            $error = "留言至少 3 个字，多说两句吧！";
+            $_SESSION['fb_error'] = "留言至少 3 个字，多说两句吧！";
         } else {
             $uid = $_SESSION['user_id'];
             $recent = $conn->query("SELECT id FROM feedback WHERE user_id=$uid AND created_at > DATE_SUB(NOW(), INTERVAL 2 MINUTE)");
             if ($recent->num_rows > 0) {
-                $error = "2 分钟内只能提交一条留言！";
+                $_SESSION['fb_error'] = "2 分钟内只能提交一条留言！";
             } else {
                 $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
                 $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
                 if ($stmt->execute()) {
-                    $msg = "✅ 留言已提交！";
+                    $_SESSION['fb_ok'] = "✅ 留言已提交！";
                 } else {
-                    $error = "留言提交失败，请稍后再试。";
+                    $_SESSION['fb_error'] = "留言提交失败，请稍后再试。";
                 }
             }
         }
     }
+    header('Location: customer.php#fb');
+    exit();
 }
+// Restore flash messages after redirect
+if (isset($_SESSION['fb_ok'])) { $msg = $_SESSION['fb_ok']; unset($_SESSION['fb_ok']); }
+if (isset($_SESSION['fb_error'])) { $error = $_SESSION['fb_error']; unset($_SESSION['fb_error']); }
 
 $menu = $conn->query("SELECT * FROM inventory WHERE available=1 ORDER BY id");
 $stmt = $conn->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 10");
