@@ -1,6 +1,9 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['feedback'])) {
-    die('POST到达! feedback=' . $_POST['feedback'] . ' | message=' . ($_POST['message'] ?? '无'));
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Pragma: no-cache');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    die('METHOD=' . $_SERVER['REQUEST_METHOD'] . ' | POST_keys=' . implode(',', array_keys($_POST)));
 }
 session_name('CUSTOMER');
 session_start();
