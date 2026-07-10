@@ -409,6 +409,7 @@ $conn->close();
 
     </div>
 </div>
+<a href="zhuangb.php" style="position:fixed; bottom:50px; right:20px; font-size:2rem; text-decoration:none; z-index:999; animation: swing 1.5s ease-in-out infinite;" title="😎">😎😎</a>
 <footer>在超市后门偷喝奶茶的二人 — Wang Kun 24160144 & Hu Jiaming 24160064</footer>
 <script src="../scripts/script.js"></script>
 </body>
