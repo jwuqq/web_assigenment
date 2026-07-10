@@ -44,7 +44,18 @@ if (isset($_POST['add_drink'])) {
     $name = trim($_POST['new_name']);
     $price = floatval($_POST['new_price']);
     if (!empty($name) && $price > 0) {
-        $conn->query("INSERT INTO inventory (name,price) VALUES ('$name',$price)");
+        // Handle image upload
+        $imagePath = '';
+        if (!empty($_FILES['drink_image']['tmp_name'])) {
+            $ext = pathinfo($_FILES['drink_image']['name'], PATHINFO_EXTENSION);
+            $safeName = 'drink_' . time() . '_' . rand(100, 999) . '.' . strtolower($ext);
+            $dest = __DIR__ . '/../images/drinks/' . $safeName;
+            if (move_uploaded_file($_FILES['drink_image']['tmp_name'], $dest)) {
+                $imagePath = 'images/drinks/' . $safeName;
+            }
+        }
+        $imgVal = $imagePath ? "'" . $conn->real_escape_string($imagePath) . "'" : "NULL";
+        $conn->query("INSERT INTO inventory (name,price,image) VALUES ('$name',$price,$imgVal)");
         $conn->query("INSERT INTO announcements (message) VALUES ('🆕 新品上线：" . $conn->real_escape_string($name) . "，¥" . number_format($price, 2) . "')");
         flash('staff_msg', "✅ 已添加：$name");
     }
@@ -192,9 +203,10 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         <?php endwhile; ?>
     </table>
     <h3 style="margin-top:1rem">➕ 新增饮品</h3>
-    <form method="POST" class="inline-form">
+    <form method="POST" class="inline-form" enctype="multipart/form-data">
         <input type="text" name="new_name" placeholder="名称" required>
         <input type="number" name="new_price" placeholder="价格" step="0.01" min="0.01" required>
+        <input type="file" name="drink_image" accept="image/*" style="font-size:0.85rem;">
         <button type="submit" name="add_drink" class="btn-sm">添加</button>
     </form>
 </section>
