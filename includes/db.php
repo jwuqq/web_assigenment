@@ -44,5 +44,4 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// 之前忘了设编码，中文全变???了，血的教训
 $conn->set_charset('utf8mb4');

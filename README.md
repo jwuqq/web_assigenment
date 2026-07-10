@@ -90,6 +90,10 @@ HTML · CSS · JavaScript · PHP · MySQL（纯原生，无框架）
 | revenue | 已完成订单流水（营收统计） |
 | announcements | 店员操作公告 & 每日推荐 |
 
+## 在线体验
+
+🌐 **https://milktea.rf.gd**
+
 ## 本地运行
 
 1. XAMPP 启动 Apache + MySQL
