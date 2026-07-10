@@ -172,7 +172,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>在超市后门偷喝奶茶的二人 — 顾客</title>
-<link rel="stylesheet" href="../styles/index.css"><link rel="stylesheet" href="../styles/customer.css">
+<link rel="stylesheet" href="../styles/index.css?v=20260710a"><link rel="stylesheet" href="../styles/customer.css?v=20260710a">
 </head>
 <body>
 <!-- ── 顶部导航 ── -->
@@ -348,6 +348,6 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 </div>
 
 <footer>在超市后门偷喝奶茶的二人 — Wang Kun 24160144 & Hu Jiaming 24160064</footer>
-<script src="../scripts/script.js"></script>
-<script src="../scripts/customer.js"></script>
+<script src="../scripts/script.js?v=20260710a"></script>
+<script src="../scripts/customer.js?v=20260710a"></script>
 </body></html>

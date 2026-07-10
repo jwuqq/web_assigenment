@@ -130,7 +130,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelectorAll('.btn-add-cart').forEach(function (btn) {
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var keepX = window.pageXOffset;
+            var keepY = window.pageYOffset;
             var card = btn.closest('.drink-card');
             var input = card ? card.querySelector('.qty-input') : null;
             var id = btn.getAttribute('data-id');
@@ -163,6 +167,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 btn.textContent = '加入购物车';
                 btn.classList.remove('is-added');
             }, 900);
+
+            window.requestAnimationFrame(function () {
+                window.scrollTo(keepX, keepY);
+            });
         });
     });
 
