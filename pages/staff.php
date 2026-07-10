@@ -8,14 +8,21 @@ require_once '../includes/db.php';
 
 $msg = '';
 
-// --- Complete order → revenue ---
-if (isset($_POST['complete'])) {
+// Flash message helper
+function flash($key, $val) { $_SESSION[$key] = $val; }
+function do_redirect($anchor = '') {
+    header('Location: staff.php' . ($anchor ? '#' . $anchor : ''));
+    exit();
+}
+
+// --- Complete order (AJAX sendBeacon, no redirect needed) ---
+if (isset($_POST['complete']) && empty($_POST['_ajax'])) {
+    // fallback for non-AJAX
     $oid = intval($_POST['order_id']);
     $o = $conn->query("SELECT * FROM orders WHERE id=$oid")->fetch_assoc();
     if ($o && $o['status']==='pending') {
         $conn->query("UPDATE orders SET status='done' WHERE id=$oid");
         $conn->query("INSERT INTO revenue (order_id,drink_name,quantity,amount) VALUES ($oid,'{$o['drink_name']}',{$o['quantity']},{$o['total_price']})");
-        $msg = "✅ 订单 #$oid 已完成！";
     }
 }
 
@@ -27,8 +34,9 @@ if (isset($_POST['toggle'])) {
     if ($drink) {
         $status = $drink['available'] ? '🔴 ' . $drink['name'] . ' 暂时售罄' : '🧋 ' . $drink['name'] . ' 已上架，欢迎点单！';
         $conn->query("INSERT INTO announcements (message) VALUES ('$status')");
+        flash('staff_msg', "✅ 已更新：" . $drink['name']);
     }
-    $msg = $drink ? "✅ 已更新：" . $drink['name'] : '';
+    do_redirect('stock');
 }
 
 // --- Add new drink ---
@@ -38,8 +46,9 @@ if (isset($_POST['add_drink'])) {
     if (!empty($name) && $price > 0) {
         $conn->query("INSERT INTO inventory (name,price) VALUES ('$name',$price)");
         $conn->query("INSERT INTO announcements (message) VALUES ('🆕 新品上线：" . $conn->real_escape_string($name) . "，¥" . number_format($price, 2) . "')");
-        $msg = "✅ 已添加：$name";
+        flash('staff_msg', "✅ 已添加：$name");
     }
+    do_redirect('stock');
 }
 
 // --- Reply feedback ---
@@ -48,11 +57,12 @@ if (isset($_POST['reply'])) {
     $reply = trim($_POST['reply_text']);
     if (!empty($reply)) {
         $conn->query("UPDATE feedback SET reply='$reply' WHERE id=$fid");
-        $msg = "✅ 已回复！";
+        flash('staff_msg', "✅ 已回复！");
     }
+    do_redirect('reviews');
 }
 
-// --- Update price ---
+// --- Update price (AJAX +/- via sendBeacon, only "set" redirects) ---
 if (isset($_POST['update_price'])) {
     $did = intval($_POST['drink_id']);
     $drink = $conn->query("SELECT name, price FROM inventory WHERE id=$did")->fetch_assoc();
@@ -60,16 +70,21 @@ if (isset($_POST['update_price'])) {
         $oldPrice = $drink['price'];
         if ($_POST['price_action'] === 'inc') {
             $newPrice = $oldPrice + 1;
+            $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
+            exit(); // AJAX, no output
         } elseif ($_POST['price_action'] === 'dec') {
             $newPrice = max(0, $oldPrice - 1);
+            $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
+            exit(); // AJAX, no output
         } elseif ($_POST['price_action'] === 'set') {
             $newPrice = max(0, floatval($_POST['new_price']));
+            $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
             if ($newPrice != $oldPrice) {
                 $conn->query("INSERT INTO announcements (message) VALUES ('💰 {$drink['name']} 价格调整：¥" . number_format($oldPrice, 2) . " → ¥" . number_format($newPrice, 2) . "')");
             }
-            $msg = "✅ 价格已更新：" . $drink['name'];
+            flash('staff_msg', "✅ 价格已更新：" . $drink['name']);
+            do_redirect('stock');
         }
-        $conn->query("UPDATE inventory SET price=$newPrice WHERE id=$did");
     }
 }
 
@@ -77,8 +92,12 @@ if (isset($_POST['update_price'])) {
 if (isset($_POST['delete_drink'])) {
     $did = intval($_POST['drink_id']);
     $conn->query("DELETE FROM inventory WHERE id=$did");
-    $msg = "✅ 已删除饮品 #$did";
+    flash('staff_msg', "✅ 已删除饮品 #$did");
+    do_redirect('stock');
 }
+
+// Restore flash message
+if (isset($_SESSION['staff_msg'])) { $msg = $_SESSION['staff_msg']; unset($_SESSION['staff_msg']); }
 
 $pendingOrders = $conn->query("SELECT o.*,u.username FROM orders o JOIN users u ON o.user_id=u.id WHERE o.status='pending' ORDER BY o.created_at");
 $inventory = $conn->query("SELECT * FROM inventory ORDER BY id");
