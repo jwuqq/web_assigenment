@@ -486,4 +486,23 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 5000);
     };
 
+    // === Staff: AJAX price +/- ===
+    document.querySelectorAll('.ajax-price-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var id = this.dataset.id;
+            var action = this.dataset.action;
+            var priceEl = document.getElementById('price-' + id);
+            var current = parseFloat(priceEl.textContent.replace('¥', ''));
+            var delta = action === 'inc' ? 1 : -1;
+            var updated = Math.max(0, current + delta);
+            priceEl.textContent = '¥' + updated.toFixed(2);
+
+            var fd = new FormData();
+            fd.append('drink_id', id);
+            fd.append('update_price', '1');
+            fd.append('price_action', action);
+            navigator.sendBeacon(window.location.href, fd);
+        });
+    });
+
 });

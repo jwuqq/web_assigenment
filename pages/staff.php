@@ -37,7 +37,7 @@ if (isset($_POST['add_drink'])) {
     $price = floatval($_POST['new_price']);
     if (!empty($name) && $price > 0) {
         $conn->query("INSERT INTO inventory (name,price) VALUES ('$name',$price)");
-        $conn->query("INSERT INTO announcements (message) VALUES ('🆕 新品上线：$name，¥$price')");
+        $conn->query("INSERT INTO announcements (message) VALUES ('🆕 新品上线：" . $conn->real_escape_string($name) . "，¥" . number_format($price, 2) . "')");
         $msg = "✅ 已添加：$name";
     }
 }
@@ -155,19 +155,9 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
             <td><?php echo $d['id']; ?></td>
             <td><?php echo $d['name']; ?></td>
             <td style="white-space:nowrap;">
-                <form method="POST" style="display:inline-flex; align-items:center; gap:4px;">
-                    <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
-                    <input type="hidden" name="update_price" value="1">
-                    <input type="hidden" name="price_action" value="dec">
-                    <button type="submit" class="btn-sm" style="padding:0.2rem 0.5rem; font-size:0.8rem;">−</button>
-                </form>
-                ¥<?php echo number_format($d['price'], 2); ?>
-                <form method="POST" style="display:inline-flex; align-items:center; gap:4px;">
-                    <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
-                    <input type="hidden" name="update_price" value="1">
-                    <input type="hidden" name="price_action" value="inc">
-                    <button type="submit" class="btn-sm" style="padding:0.2rem 0.5rem; font-size:0.8rem;">+</button>
-                </form>
+                <button type="button" class="btn-sm ajax-price-btn" data-id="<?php echo $d['id']; ?>" data-action="dec" style="padding:0.2rem 0.5rem; font-size:0.8rem;">−</button>
+                <span class="price-display" id="price-<?php echo $d['id']; ?>">¥<?php echo number_format($d['price'], 2); ?></span>
+                <button type="button" class="btn-sm ajax-price-btn" data-id="<?php echo $d['id']; ?>" data-action="inc" style="padding:0.2rem 0.5rem; font-size:0.8rem;">+</button>
                 <form method="POST" style="display:inline-flex; align-items:center; gap:2px; margin-left:6px;">
                     <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
                     <input type="hidden" name="update_price" value="1">
