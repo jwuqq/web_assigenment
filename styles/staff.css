@@ -152,6 +152,9 @@ body {
     #stock,
     #revenue {
         overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pan-y;
     }
     #orders .data-table,
     #stock .data-table,

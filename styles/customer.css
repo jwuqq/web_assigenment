@@ -156,6 +156,7 @@ body {
     position: relative;
     transform-origin: center;
     transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+    touch-action: pan-y;
 }
 .drink-card:hover {
     z-index: 5;
@@ -241,6 +242,7 @@ body {
     font-weight: 800;
     line-height: 1;
     transition: background 0.2s, color 0.2s;
+    touch-action: manipulation;
 }
 .qty-btn:hover {
     background: #6a1b9a;
@@ -392,6 +394,7 @@ body {
 @media (max-width: 640px) {
     body {
         overflow-x: hidden;
+        touch-action: pan-y;
     }
     .customer-hero {
         min-height: auto;
@@ -414,7 +417,11 @@ body {
     }
     .drink-card:hover,
     .drink-card:focus-within {
-        transform: translateY(-3px);
+        transform: none;
+    }
+    .drink-card:hover .drink-photo,
+    .drink-card:focus-within .drink-photo {
+        transform: none;
     }
     .drink-info {
         min-height: auto;
@@ -449,6 +456,9 @@ body {
     }
     #queue {
         overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pan-y;
     }
     #queue .data-table {
         min-width: 560px;
