@@ -179,16 +179,14 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         <tr>
             <td><?php echo $d['id']; ?></td>
             <td><?php echo $d['name']; ?></td>
-            <td style="white-space:nowrap;">
-                <button type="button" class="btn-sm ajax-price-btn" data-id="<?php echo $d['id']; ?>" data-action="dec" style="padding:0.2rem 0.5rem; font-size:0.8rem;">−</button>
-                <span class="price-display" id="price-<?php echo $d['id']; ?>">¥<?php echo number_format($d['price'], 2); ?></span>
-                <button type="button" class="btn-sm ajax-price-btn" data-id="<?php echo $d['id']; ?>" data-action="inc" style="padding:0.2rem 0.5rem; font-size:0.8rem;">+</button>
-                <form method="POST" style="display:inline-flex; align-items:center; gap:2px; margin-left:6px;">
+            <td>
+                <span class="price">¥<?php echo number_format($d['price'], 2); ?></span>
+                <form method="POST" style="display:flex; gap:4px; align-items:center; margin-top:4px;">
                     <input type="hidden" name="drink_id" value="<?php echo $d['id']; ?>">
                     <input type="hidden" name="update_price" value="1">
                     <input type="hidden" name="price_action" value="set">
-                    <input type="number" name="new_price" step="0.01" min="0" value="<?php echo number_format($d['price'], 2); ?>" style="width:65px; padding:0.2rem 0.3rem; font-size:0.8rem; border:1px solid #ddd; border-radius:4px; text-align:center;">
-                    <button type="submit" class="btn-sm" style="padding:0.2rem 0.4rem; font-size:0.75rem;">确定</button>
+                    <input type="number" name="new_price" step="0.01" min="0" value="<?php echo number_format($d['price'], 2); ?>" style="width:70px; padding:0.3rem; text-align:center; border:1px solid #ddd; border-radius:6px; font-size:0.85rem;">
+                    <button type="submit" class="btn-sm">确定</button>
                 </form>
             </td>
             <td><?php echo $d['available'] ? '🟢 上架' : '🔴 售罄'; ?></td>
