@@ -1,39 +1,31 @@
 <?php
 /**
- * 数据库连接 — 自动适配本地/云端环境
- *
- * 云端部署时修改下方 $cloud_* 变量即可，本地无需改动
+ * 数据库连接 — 自动适配 本地/InfinityFree/Render 环境
  */
 
-// ── 云端配置 ──
-$cloud_host = 'sql303.infinityfree.com';
-$cloud_user = 'if0_42373350';
-$cloud_pass = 'TNwKwbD70Z9T';
-$cloud_name = 'if0_42373350_final_exam';
-$cloud_port = 3306;
-
-// ── 本地配置 ──
-$local_host = 'localhost';
-$local_user = 'root';
-$local_pass = '';
-$local_name = 'final_exam';
-$local_port = 3307;
-
-// ── 自动判断环境 ──
-if (getenv('INFINITYFREE') || strpos($_SERVER['HTTP_HOST'] ?? '', 'rf.gd') !== false || strpos($_SERVER['HTTP_HOST'] ?? '', 'epizy.com') !== false) {
-    // 云端
-    $db_host = $cloud_host;
-    $db_username = $cloud_user;
-    $db_password = $cloud_pass;
-    $db_name = $cloud_name;
-    $port = $cloud_port;
-} else {
-    // 本地
-    $db_host = $local_host;
-    $db_username = $local_user;
-    $db_password = $local_pass;
-    $db_name = $local_name;
-    $port = $local_port;
+// ── Render 环境（自动检测环境变量）──
+if (getenv('RENDER')) {
+    $db_host = getenv('MYSQL_HOST') ?: 'localhost';
+    $db_username = getenv('MYSQL_USER') ?: 'root';
+    $db_password = getenv('MYSQL_PASSWORD') ?: '';
+    $db_name = getenv('MYSQL_DATABASE') ?: 'final_exam';
+    $port = intval(getenv('MYSQL_PORT') ?: 3306);
+}
+// ── InfinityFree 环境 ──
+elseif (strpos($_SERVER['HTTP_HOST'] ?? '', 'rf.gd') !== false || strpos($_SERVER['HTTP_HOST'] ?? '', 'epizy.com') !== false) {
+    $db_host = 'sql303.infinityfree.com';
+    $db_username = 'if0_42373350';
+    $db_password = 'TNwKwbD70Z9T';
+    $db_name = 'if0_42373350_final_exam';
+    $port = 3306;
+}
+// ── 本地环境 ──
+else {
+    $db_host = 'localhost';
+    $db_username = 'root';
+    $db_password = '';
+    $db_name = 'final_exam';
+    $port = 3307;
 }
 
 $conn = new mysqli($db_host, $db_username, $db_password, $db_name, $port);
