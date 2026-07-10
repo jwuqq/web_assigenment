@@ -94,6 +94,8 @@ HTML · CSS · JavaScript · PHP · MySQL（纯原生，无框架）
 
 🌐 **https://milktea.rf.gd**
 
+> 📱 手机请用自带浏览器（Safari / Chrome）打开，微信/QQ 内置浏览器可能拦截
+
 ## 本地运行
 
 1. XAMPP 启动 Apache + MySQL
