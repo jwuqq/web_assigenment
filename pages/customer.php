@@ -122,7 +122,8 @@ if (isset($_POST['feedback'])) {
             $stmt = $conn->prepare("INSERT INTO feedback (user_id,username,message) VALUES (?,?,?)");
             $stmt->bind_param("iss", $_SESSION['user_id'], $_SESSION['username'], $msg_text);
             if ($stmt->execute()) {
-                $msg = "✅ 留言已提交！";
+                $msg = "✅ 留言已提交！(ID=" . $stmt->insert_id . ")";
+                error_log("Feedback inserted: ID=" . $stmt->insert_id . " user=" . $_SESSION['username']);
             } else {
                 $error = "留言提交失败: " . $stmt->error;
             }
@@ -277,7 +278,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY created_at D
 <!-- 留言反馈 -->
 <section id="fb" class="card">
     <h2>💬 留言反馈</h2>
-    <form method="POST">
+    <form method="POST" action="">
         <textarea name="message" rows="3" placeholder="告诉我们你的想法…" required></textarea>
         <button type="submit" name="feedback" class="btn-primary">提交反馈</button>
     </form>
