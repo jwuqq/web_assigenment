@@ -3,38 +3,39 @@ document.addEventListener('DOMContentLoaded', function () {
     // 订单制作进度条
     window.startMaking = function(btn, oid) {
         var cell = btn.closest('.order-action-cell');
-        var form = btn.closest('.make-form');
         var progressWrap = cell.querySelector('.progress-wrap');
         var progressFill = progressWrap.querySelector('.progress-fill');
+        var row = cell.closest('tr');
 
-        // Hide button, show progress
+        if (!cell || !progressWrap || !progressFill || !row) return;
+
+        btn.disabled = true;
         btn.style.display = 'none';
         progressWrap.style.display = 'block';
 
-        // Start 5s animation
         progressFill.classList.add('active');
 
-        // AJAX complete after 5s — no refresh
         setTimeout(function() {
             var fd = new FormData();
             fd.append('order_id', oid);
             fd.append('complete', '1');
-            navigator.sendBeacon(window.location.href, fd);
-            // Fade out the row
-            var row = cell.closest('tr');
-            row.style.transition = 'opacity 0.5s';
-            row.style.opacity = '0';
-            setTimeout(function() { row.style.display = 'none'; }, 500);
+            fd.append('_ajax', '1');
 
-            // If no more visible orders, refresh
-            var visibleRows = document.querySelectorAll('.order-action-cell:not([style*="display: none"])');
-            // Check after row hidden
-            setTimeout(function() {
-                var remaining = document.querySelectorAll('tr:not([style*="display: none"]) .btn-make:not([style*="display: none"])');
-                if (remaining.length === 0) {
-                    location.reload();
-                }
-            }, 600);
+            fetch(window.location.href, {
+                method: 'POST',
+                body: fd,
+                credentials: 'same-origin'
+            }).finally(function () {
+                row.style.transition = 'opacity 0.5s';
+                row.style.opacity = '0';
+                setTimeout(function() {
+                    row.style.display = 'none';
+                    var remaining = document.querySelectorAll('#orders tr:not([style*="display: none"]) .btn-make');
+                    if (remaining.length === 0) {
+                        location.reload();
+                    }
+                }, 500);
+            });
         }, 5000);
     };
 
@@ -56,7 +57,5 @@ document.addEventListener('DOMContentLoaded', function () {
             navigator.sendBeacon(window.location.href, fd);
         });
     });
-
-});
 
 });

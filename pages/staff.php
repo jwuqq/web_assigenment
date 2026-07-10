@@ -16,13 +16,18 @@ function do_redirect($anchor = '') {
     exit();
 }
 
-// ── 处理订单完成（正常走sendBeacon，这里兜底非AJAX情况）──
-if (isset($_POST['complete']) && empty($_POST['_ajax'])) {
+// ── 处理订单完成：AJAX制作按钮和普通表单都走这里 ──
+if (isset($_POST['complete'])) {
     $oid = intval($_POST['order_id']);
     $o = $conn->query("SELECT * FROM orders WHERE id=$oid")->fetch_assoc();
     if ($o && $o['status']==='pending') {
         $conn->query("UPDATE orders SET status='done' WHERE id=$oid");
         $conn->query("INSERT INTO revenue (order_id,drink_name,quantity,amount) VALUES ($oid,'{$o['drink_name']}',{$o['quantity']},{$o['total_price']})");
+    }
+    if (!empty($_POST['_ajax'])) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['ok' => true]);
+        exit();
     }
 }
 
@@ -130,6 +135,7 @@ $feedback      = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC")
 <header>
 <nav>
     <div class="logo">🧋 在超市后门偷喝奶茶的二人 · 店员后台</div>
+    <button type="button" class="nav-toggle" aria-label="打开菜单" aria-expanded="false">☰</button>
     <ul class="nav-links">
         <li><a href="logout.php">🔙 退出</a></li>
         <li><a href="#orders">订单管理</a></li>

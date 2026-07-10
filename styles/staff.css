@@ -23,7 +23,7 @@ body {
 
 /* ===== Order making progress bar ===== */
 .progress-wrap {
-    width: 120px;
+    width: 128px;
     text-align: center;
 }
 .progress-bar {
@@ -54,6 +54,12 @@ body {
 .btn-make:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+.btn-make {
+    min-height: 40px;
+    padding-inline: 1rem;
+    border-radius: 10px;
+    font-weight: 700;
 }
 
 /* ===== Status badge ===== */
@@ -104,18 +110,19 @@ body {
 /* ===== Staff drink-price form ===== */
 .price-set-form {
     display: flex;
-    gap: 4px;
+    gap: 0.45rem;
     align-items: center;
     margin-top: 4px;
 }
 .price-set-form .price-input,
 .price-input {
-    width: 70px;
-    padding: 0.3rem;
+    width: 86px;
+    min-height: 38px;
+    padding: 0.35rem 0.45rem;
     text-align: center;
     border: 1px solid #ddd;
     border-radius: 6px;
-    font-size: 0.85rem;
+    font-size: 0.92rem;
 }
 
 /* ===== Utility classes (replacing inline styles) ===== */
@@ -135,4 +142,97 @@ body {
     margin-top: 0.8rem;
     max-height: 400px;
     overflow-y: auto;
+}
+
+@media (max-width: 900px) {
+    main {
+        overflow-x: hidden;
+    }
+    #orders,
+    #stock,
+    #revenue {
+        overflow-x: auto;
+    }
+    #orders .data-table,
+    #stock .data-table,
+    #revenue .data-table {
+        min-width: 760px;
+    }
+    .data-table th,
+    .data-table td {
+        vertical-align: middle;
+        white-space: nowrap;
+    }
+    .drink-name {
+        min-width: 96px;
+        white-space: normal;
+        line-height: 1.35;
+    }
+    .price-set-form {
+        flex-wrap: nowrap;
+    }
+    .form-inline {
+        display: inline-flex;
+        gap: 0.45rem;
+        align-items: center;
+    }
+    .form-inline .btn-sm,
+    .price-set-form .btn-sm {
+        min-height: 38px;
+        padding: 0.45rem 0.72rem;
+    }
+    .status-badge {
+        min-width: 86px;
+        text-align: center;
+        white-space: normal;
+        line-height: 1.25;
+    }
+    .inline-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+    .inline-form input,
+    .inline-form .file-pick,
+    .inline-form .btn-sm {
+        min-height: 44px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 640px) {
+    .logo {
+        max-width: calc(100% - 64px);
+        font-size: 1.25rem;
+        line-height: 1.25;
+    }
+    .card {
+        padding: 1rem;
+        border-radius: 12px;
+    }
+    #orders .data-table,
+    #stock .data-table,
+    #revenue .data-table {
+        min-width: 700px;
+    }
+    .order-action-cell {
+        min-width: 132px;
+    }
+    .progress-wrap {
+        width: 120px;
+    }
+    .inline-form {
+        grid-template-columns: 1fr;
+    }
+    .file-pick {
+        justify-content: center;
+        text-align: center;
+    }
+    .stats {
+        flex-direction: column;
+    }
+    .stat-box h3 {
+        font-size: 1.7rem;
+    }
 }

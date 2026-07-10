@@ -141,7 +141,7 @@ body {
 /* ===== Menu Grid ===== */
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 1.2rem;
 }
 .drink-card {
@@ -248,8 +248,15 @@ body {
 }
 .btn-add-cart {
     min-height: 40px;
-    padding-inline: 1rem;
+    flex: 1 0 100%;
+    padding: 0.7rem 1rem;
     background: #e65100;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    white-space: nowrap;
 }
 .btn-add-cart:hover {
     background: #bf4300;
@@ -318,6 +325,10 @@ body {
     opacity: 0.45;
     cursor: not-allowed;
 }
+.btn-checkout {
+    width: 100%;
+    margin-top: 0.8rem;
+}
 
 /* ===== Order confirmation modal ===== */
 .modal-backdrop {
@@ -370,4 +381,79 @@ body {
     justify-content: flex-end;
     gap: 0.6rem;
     margin-top: 1.2rem;
+}
+
+@media (max-width: 900px) {
+    .menu-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        overflow-x: hidden;
+    }
+    .customer-hero {
+        min-height: auto;
+        grid-template-columns: 1fr;
+        padding: 1.25rem;
+    }
+    .hero-copy h1 {
+        font-size: 1.65rem;
+    }
+    .hero-panel {
+        justify-self: stretch;
+        min-width: 0;
+    }
+    .section-head {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .menu-grid {
+        grid-template-columns: 1fr;
+    }
+    .drink-card:hover,
+    .drink-card:focus-within {
+        transform: translateY(-3px);
+    }
+    .drink-info {
+        min-height: auto;
+    }
+    .cart-picker {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+    }
+    .cart-picker .price {
+        font-size: 1.18rem;
+    }
+    .cart-picker .qty-stepper {
+        justify-self: end;
+        width: auto;
+        min-width: 132px;
+    }
+    .btn-add-cart {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 46px;
+    }
+    .cart-row {
+        align-items: stretch;
+        flex-direction: column;
+    }
+    .cart-row-actions {
+        justify-content: space-between;
+    }
+    .cart-row-actions .qty-stepper {
+        min-width: 132px;
+    }
+    #queue {
+        overflow-x: auto;
+    }
+    #queue .data-table {
+        min-width: 560px;
+    }
+    #fb .btn-primary {
+        width: 100%;
+    }
 }
