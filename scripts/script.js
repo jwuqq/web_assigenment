@@ -480,9 +480,27 @@ document.addEventListener('DOMContentLoaded', function () {
         // Start 5s animation
         progressFill.classList.add('active');
 
-        // Auto submit after 5s
+        // AJAX complete after 5s — no refresh
         setTimeout(function() {
-            form.submit();
+            var fd = new FormData();
+            fd.append('order_id', oid);
+            fd.append('complete', '1');
+            navigator.sendBeacon(window.location.href, fd);
+            // Fade out the row
+            var row = cell.closest('tr');
+            row.style.transition = 'opacity 0.5s';
+            row.style.opacity = '0';
+            setTimeout(function() { row.style.display = 'none'; }, 500);
+
+            // If no more visible orders, refresh
+            var visibleRows = document.querySelectorAll('.order-action-cell:not([style*="display: none"])');
+            // Check after row hidden
+            setTimeout(function() {
+                var remaining = document.querySelectorAll('tr:not([style*="display: none"]) .btn-make:not([style*="display: none"])');
+                if (remaining.length === 0) {
+                    location.reload();
+                }
+            }, 600);
         }, 5000);
     };
 
