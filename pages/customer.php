@@ -1,4 +1,7 @@
 <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['feedback'])) {
+    die('POST到达! feedback=' . $_POST['feedback'] . ' | message=' . ($_POST['message'] ?? '无'));
+}
 session_name('CUSTOMER');
 session_start();
 if (!isset($_SESSION['logged_in']) || $_SESSION['role'] !== 'customer') {
