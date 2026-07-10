@@ -983,3 +983,19 @@ textarea:focus { outline: none; border-color: #6a1b9a; }
 .btn-on:hover { background: #388e3c; }
 .btn-off { background: #ef5350; }
 .btn-off:hover { background: #e53935; }
+
+/* ===== Drink name & status art ===== */
+.drink-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #4a148c, #7b1fa2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+}
+.status-badge {
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+}

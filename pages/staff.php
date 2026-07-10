@@ -178,7 +178,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
         <?php while ($d = $inventory->fetch_assoc()): ?>
         <tr>
             <td><?php echo $d['id']; ?></td>
-            <td><?php echo $d['name']; ?></td>
+            <td class="drink-name">🧋 <?php echo htmlspecialchars($d['name']); ?></td>
             <td>
                 <span class="price">¥<?php echo number_format($d['price'], 2); ?></span>
                 <form method="POST" style="display:flex; gap:4px; align-items:center; margin-top:4px;">
@@ -191,7 +191,7 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
             </td>
             <td>
                 <span class="status-badge <?php echo $d['available'] ? 'status-on' : 'status-off'; ?>">
-                    <?php echo $d['available'] ? '✔ 在售' : '✖ 售罄'; ?>
+                    <?php echo $d['available'] ? '✔ 上架中' : '✖ 已售罄'; ?>
                 </span>
             </td>
             <td>
