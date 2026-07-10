@@ -92,13 +92,6 @@ $feedback = $conn->query("SELECT * FROM feedback ORDER BY created_at DESC");
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>在超市后门偷喝奶茶的二人 — 店员后台</title><link rel="stylesheet" href="../styles/index.css">
-<script>
-    setInterval(function(){
-        if (!document.querySelector('.progress-fill.active')) {
-            location.reload();
-        }
-    }, 8000);
-</script>
 </head>
 <body>
 <header>
