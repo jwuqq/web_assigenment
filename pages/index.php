@@ -413,5 +413,6 @@ $conn->close();
 <a href="zhuangb.php" class="easter-egg" title="你真的要看吗">😎😎</a>
 <footer>在超市后门偷喝奶茶的二人 — Wang Kun 24160144 & Hu Jiaming 24160064</footer>
 <script src="../scripts/script.js"></script>
+<script src="../scripts/login.js"></script>
 </body>
 </html>

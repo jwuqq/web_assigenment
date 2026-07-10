@@ -337,4 +337,5 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
 
 <footer>在超市后门偷喝奶茶的二人 — Wang Kun 24160144 & Hu Jiaming 24160064</footer>
 <script src="../scripts/script.js"></script>
+<script src="../scripts/customer.js"></script>
 </body></html>
