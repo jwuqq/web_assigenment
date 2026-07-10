@@ -578,8 +578,8 @@ footer {
     transition: background 0.2s;
 }
 .btn-sm:hover { background: #8e24aa; }
-.btn-danger { background: #c62828; }
-.btn-danger:hover { background: #b71c1c; }
+.btn-danger { background: #212121; }
+.btn-danger:hover { background: #000; }
 .btn-ghost {
     background: #f4eef8;
     color: #6a1b9a;
