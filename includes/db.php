@@ -21,11 +21,21 @@ elseif (strpos($_SERVER['HTTP_HOST'] ?? '', 'rf.gd') !== false || strpos($_SERVE
 }
 // ── 本地环境 ──
 else {
-    $db_host = 'localhost';
-    $db_username = 'root';
-    $db_password = '';
-    $db_name = 'final_exam';
-    $port = 3307;
+    // 本地连云端：改为 true → 本地也读写 InfinityFree 数据库（所有人同步）
+    $local_use_cloud = false;
+    if ($local_use_cloud) {
+        $db_host = 'sql303.infinityfree.com';
+        $db_username = 'if0_42373350';
+        $db_password = 'TNwKwbD70Z9T';
+        $db_name = 'if0_42373350_final_exam';
+        $port = 3306;
+    } else {
+        $db_host = 'localhost';
+        $db_username = 'root';
+        $db_password = '';
+        $db_name = 'final_exam';
+        $port = 3307;
+    }
 }
 
 $conn = new mysqli($db_host, $db_username, $db_password, $db_name, $port);
