@@ -95,7 +95,4 @@ CREATE TABLE announcements (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO announcements (message) VALUES
-('今日推荐：招牌珍珠奶茶和芋泥波波奶茶。');
-
 SET FOREIGN_KEY_CHECKS = 1;
