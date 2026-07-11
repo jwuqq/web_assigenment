@@ -70,6 +70,35 @@ body {
     margin-bottom: 0.25rem;
     font-size: 1.3rem;
 }
+.hero-panel small {
+    display: block;
+    margin-top: 0.35rem;
+    color: rgba(255,255,255,0.78);
+    font-size: 0.78rem;
+}
+.hero-panel-closed {
+    border-color: rgba(255,218,185,0.8);
+    background: rgba(92, 40, 20, 0.42);
+}
+.closed-notice {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid rgba(211,84,0,0.22);
+    border-left: 4px solid #d35400;
+    border-radius: 10px;
+    background: #fff6ec;
+    color: #70401f;
+}
+.closed-notice strong {
+    flex: 0 0 auto;
+    color: #d35400;
+}
+.closed-notice span {
+    line-height: 1.45;
+}
 .announcement-card {
     background: #f3e5f5;
     border-left: 4px solid #6a1b9a;

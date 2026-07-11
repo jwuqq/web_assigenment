@@ -45,12 +45,25 @@ function drink_note($name) {
     return $notes[$name] ?? '鲜奶茶底，可按口味备注给店员。';
 }
 
+// ── 营业时间检查：休息时只展示菜单，不允许下单 ──
+$shopTz = new DateTimeZone('Asia/Hong_Kong');
+$now = new DateTime('now', $shopTz);
+$openAt = DateTime::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-d') . ' 10:00:00', $shopTz);
+$closeAt = DateTime::createFromFormat('Y-m-d H:i:s', $now->format('Y-m-d') . ' 22:00:00', $shopTz);
+$businessOpen = $now >= $openAt && $now < $closeAt;
+$currentTimeText = $now->format('H:i');
+$closedMessage = "现在是 {$currentTimeText}，本店休息中。营业时间为 10:00 - 22:00，请营业时间内再下单。";
+
 // ── 购物车批量下单：用事务保证原子性 ──
 if (isset($_POST['checkout_cart'])) {
     $cart_payload = $_POST['cart_payload'] ?? '[]';
     $cart_items = json_decode($cart_payload, true);
 
-    if (!is_array($cart_items) || count($cart_items) === 0) {
+    if (!$businessOpen) {
+        $_SESSION['cart_error'] = $closedMessage;
+        header('Location: customer.php#menu');
+        exit();
+    } elseif (!is_array($cart_items) || count($cart_items) === 0) {
         $error = "购物车还是空的，请先选择饮品。";
     } else {
         $inserted = 0;
@@ -98,6 +111,9 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
     $drink_id = (int)($_POST['drink_id'] ?? 0);
     $qty = max(1, min(10, (int)($_POST['quantity'] ?? 1)));
 
+    if (!$businessOpen) {
+        $error = $closedMessage;
+    } else {
     $stmt = $conn->prepare("SELECT name, price FROM inventory WHERE id = ? AND available = 1");
     $stmt->bind_param("i", $drink_id);
     $stmt->execute();
@@ -113,6 +129,7 @@ if (isset($_POST['order']) && !isset($_POST['checkout_cart'])) {
         }
     } else {
         $error = "该饮品暂不可售，请重新选择。";
+    }
     }
 }
 
@@ -155,11 +172,10 @@ $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $myOrders = $stmt->get_result();
 
-// 每日推荐：每天第一位访客触发，删掉旧的换新的，永远只有一条
+// 每日推荐：当天第一位访客触发随机选择，写入DB后全天不变，第二天自动刷新
 $today = date('Y-m-d');
 $todayRec = $conn->query("SELECT id FROM announcements WHERE message LIKE '🌟 今日推荐%' AND DATE(created_at)='$today'");
 if ($todayRec->num_rows === 0) {
-    $conn->query("DELETE FROM announcements WHERE message LIKE '🌟 今日推荐%'");
     $rand = $conn->query("SELECT name FROM inventory WHERE available=1 ORDER BY RAND() LIMIT 1")->fetch_assoc();
     if ($rand) {
         $conn->query("INSERT INTO announcements (message) VALUES ('🌟 今日推荐：{$rand['name']} —— 试试看吧！')");
@@ -202,9 +218,10 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
         <h1>挑一杯顺口的奶茶</h1>
         <p>登录后可直接下单、查看候单进度，也能给店员留言反馈口味建议。</p>
     </div>
-    <div class="hero-panel">
-        <strong>营业中</strong>
+    <div class="hero-panel <?php echo $businessOpen ? 'hero-panel-open' : 'hero-panel-closed'; ?>">
+        <strong><?php echo $businessOpen ? '营业中' : '休息中'; ?></strong>
         <span>10:00 - 22:00</span>
+        <small>当前时间 <?php echo htmlspecialchars($currentTimeText); ?></small>
     </div>
 </section>
 
@@ -239,9 +256,15 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
             <input type="search" id="drink-search" placeholder="输入饮品名称">
         </label>
     </div>
+    <?php if (!$businessOpen): ?>
+    <div class="closed-notice">
+        <strong>挂牌休息中</strong>
+        <span><?php echo htmlspecialchars($closedMessage); ?></span>
+    </div>
+    <?php endif; ?>
     <div class="menu-grid">
     <?php while ($d = $menu->fetch_assoc()): ?>
-        <div class="drink-card" data-name="<?php echo htmlspecialchars($d['name'], ENT_QUOTES); ?>">
+        <article class="drink-card" data-name="<?php echo htmlspecialchars($d['name'], ENT_QUOTES); ?>">
             <img class="drink-photo" src="<?php echo htmlspecialchars(drink_image_src($d['name'], $d['image'] ?? ''), ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($d['name'], ENT_QUOTES); ?>">
             <div class="drink-info">
                 <h3><?php echo htmlspecialchars($d['name']); ?></h3>
@@ -250,17 +273,18 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
             <div class="order-form cart-picker">
                 <span class="price">¥<?php echo money_fmt($d['price']); ?></span>
                 <div class="qty-stepper" aria-label="选择数量">
-                    <button type="button" class="qty-btn qty-minus" aria-label="减少数量">−</button>
-                    <input type="number" value="1" min="1" max="10" class="qty-input" aria-label="数量">
-                    <button type="button" class="qty-btn qty-plus" aria-label="增加数量">+</button>
+                    <button type="button" class="qty-btn qty-minus" aria-label="减少数量"<?php echo $businessOpen ? '' : ' disabled'; ?>>−</button>
+                    <input type="number" value="1" min="1" max="10" class="qty-input" aria-label="数量"<?php echo $businessOpen ? '' : ' disabled'; ?>>
+                    <button type="button" class="qty-btn qty-plus" aria-label="增加数量"<?php echo $businessOpen ? '' : ' disabled'; ?>>+</button>
                 </div>
                 <button type="button"
                         class="btn-sm btn-add-cart"
                         data-id="<?php echo $d['id']; ?>"
                         data-name="<?php echo htmlspecialchars($d['name'], ENT_QUOTES); ?>"
-                        data-price="<?php echo money_fmt($d['price']); ?>">加入购物车</button>
+                        data-price="<?php echo money_fmt($d['price']); ?>"
+                        <?php echo $businessOpen ? '' : 'disabled'; ?>>加入购物车</button>
             </div>
-        </div>
+        </article>
     <?php endwhile; ?>
     </div>
     <p class="empty-state" id="drink-empty" hidden>没有找到对应饮品。</p>
@@ -273,7 +297,7 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
             <h2>🛒 我的购物车</h2>
             <p>可以同时选择多款饮品，确认后统一提交给店员。</p>
         </div>
-        <button type="button" class="btn-sm btn-ghost" id="cart-clear">清空</button>
+        <button type="button" class="btn-sm btn-ghost" id="cart-clear"<?php echo $businessOpen ? '' : ' disabled'; ?>>清空</button>
     </div>
     <div class="cart-list" id="cart-list">
         <p class="empty-state">购物车为空，先去选择饮品吧。</p>
@@ -282,10 +306,10 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
         <span>合计</span>
         <strong id="cart-total">¥0.00</strong>
     </div>
-    <form method="POST" id="cart-checkout-form">
+    <form method="POST" id="cart-checkout-form" data-business-open="<?php echo $businessOpen ? '1' : '0'; ?>">
         <input type="hidden" name="checkout_cart" value="1">
         <input type="hidden" name="cart_payload" id="cart-payload" value="[]">
-        <button type="submit" class="btn-primary btn-checkout" disabled>提交订单</button>
+        <button type="submit" class="btn-primary btn-checkout" disabled><?php echo $businessOpen ? '提交订单' : '休息中，暂不接单'; ?></button>
     </form>
 </section>
 
@@ -324,13 +348,13 @@ $announcements = $conn->query("SELECT * FROM announcements ORDER BY CASE WHEN me
     $fbs = $stmt->get_result();
     while ($f = $fbs->fetch_assoc()):
     ?>
-    <div class="fb-item">
+    <article class="fb-item">
         <p><strong><?php echo $f['username']; ?></strong> · <?php echo $f['created_at']; ?></p>
         <p><?php echo nl2br(htmlspecialchars($f['message'])); ?></p>
         <?php if ($f['reply']): ?>
         <p class="fb-reply">🧋 店员回复：<?php echo nl2br(htmlspecialchars($f['reply'])); ?></p>
         <?php endif; ?>
-    </div>
+    </article>
     <?php endwhile; ?>
 </section>
 </main>

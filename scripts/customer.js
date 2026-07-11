@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var cartForm = document.getElementById('cart-checkout-form');
     var checkoutBtn = document.querySelector('.btn-checkout');
     var cartClear = document.getElementById('cart-clear');
+    var businessOpen = !cartForm || cartForm.getAttribute('data-business-open') === '1';
     var cart = {};
 
     function closeOrderModal() {
@@ -104,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         cartPayload.value = JSON.stringify(items.map(function (item) {
             return { id: item.id, qty: item.qty };
         }));
-        if (checkoutBtn) checkoutBtn.disabled = false;
+        if (checkoutBtn) checkoutBtn.disabled = !businessOpen;
     }
 
     document.querySelectorAll('.qty-stepper').forEach(function (stepper) {
@@ -133,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            if (!businessOpen || btn.disabled) return;
             var keepX = window.pageXOffset;
             var keepY = window.pageYOffset;
             var card = btn.closest('.drink-card');
@@ -176,6 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (cartClear) {
         cartClear.addEventListener('click', function () {
+            if (!businessOpen || cartClear.disabled) return;
             cart = {};
             renderCart();
         });
@@ -208,6 +211,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (cartForm) {
         cartForm.addEventListener('submit', function (e) {
+            if (!businessOpen) {
+                e.preventDefault();
+                return;
+            }
             var items = cartItems();
             if (items.length === 0) {
                 e.preventDefault();
