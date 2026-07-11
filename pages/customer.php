@@ -172,10 +172,11 @@ $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
 $myOrders = $stmt->get_result();
 
-// 每日推荐：当天第一位访客触发随机选择，写入DB后全天不变，第二天自动刷新
+// 每日推荐：每天第一位访客触发，删掉旧的换新的，永远只有一条
 $today = date('Y-m-d');
 $todayRec = $conn->query("SELECT id FROM announcements WHERE message LIKE '🌟 今日推荐%' AND DATE(created_at)='$today'");
 if ($todayRec->num_rows === 0) {
+    $conn->query("DELETE FROM announcements WHERE message LIKE '🌟 今日推荐%'");
     $rand = $conn->query("SELECT name FROM inventory WHERE available=1 ORDER BY RAND() LIMIT 1")->fetch_assoc();
     if ($rand) {
         $conn->query("INSERT INTO announcements (message) VALUES ('🌟 今日推荐：{$rand['name']} —— 试试看吧！')");
